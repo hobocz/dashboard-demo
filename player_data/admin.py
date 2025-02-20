@@ -8,7 +8,7 @@ class PlayerAdmin(admin.ModelAdmin):
 
 @admin.register(Batting)
 class BattingAdmin(admin.ModelAdmin):
-  list_display = ['year', 'runs']
+  list_display = ['player', 'year', 'org_abbreviation']
 
 @admin.register(Pitching)
 class PitchingAdmin(admin.ModelAdmin):
