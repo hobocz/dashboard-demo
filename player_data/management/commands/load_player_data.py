@@ -13,8 +13,8 @@ class Command(BaseCommand):
         parser.add_argument("data_file", type=str)
 
     def handle(self, *args, **options):
-        #---------- Read and parse the data into 3 pandas DataFrames ----------
-        #---------- Each DataFrame correlates to a Model ----------
+        # ========== Read and parse the data into 3 pandas DataFrames ==========
+        # ========== Each DataFrame correlates to a Model ==========
         self.stdout.write('Importing file...')
         with open('players.json', 'r') as f:
             file_data = json.load(f)
@@ -38,22 +38,37 @@ class Command(BaseCommand):
         batting_df = pd.DataFrame(batting_data)
         pitching_df = pd.DataFrame(pitching_data)
 
-        # ---------- Perform any validation and/or transformation ----------
+        # ========== Perform any validation and/or transformation ==========
         self.stdout.write('Validation & transformation...')
+        players_issues = players_df[(players_df['id'].isna()) | (~players_df['id'].apply(lambda x: isinstance(x, (int, float))))]
+        if len(players_issues) > 0:
+            self.stdout.write('The following players have an invalid "id" value:')
+            print(players_issues[['id','name_first', 'name_last']])
+            #return
+        players_issues = players_df[(players_df['name_last'].isna()) | (players_df['name_last'].str.len() == 0)]
+        if len(players_issues) > 0:
+            self.stdout.write('The following players do not have a "name_last" value:')
+            print(players_issues[['id','name_first', 'name_last']])
+            #return
+        players_issues = players_df[players_df['height_inches'].isna()]
+        if len(players_issues) > 0:
+            self.stdout.write('The following players do not have a "height_inches" value:')
+            self.stdout.write('--- Substitute will be 0')
+            print(players_issues[['id','name_first', 'name_last', 'height_inches']])
+            players_df['height_inches'] = players_df['height_inches'].fillna(0)
+            
+        team_list = ['BAL', 'BOS', 'NYY', 'TB', 'TOR', 'CWS', 'CLE', 'DET', 'KC', 'MIN', 'HOU', 'LAA', 'OAK', 'SEA', 'TEX', 'ATL', 'MIA', 'NYM', 'PHI', 'WSH', 'CHC', 'CIN', 'MIL', 'PIT', 'STL', 'ARI', 'COL', 'LAD', 'SD', 'SF']
+        players_issues = players_df[~players_df['team'].isin(team_list)]
+        if len(players_issues) > 0:
+            self.stdout.write('The following players don\'t have a recognized "team" value:')
+            print(players_issues[['id','name_first', 'name_last', 'team']])
+            #return
+
         players_df = players_df.replace(np.nan, None)
         batting_df = batting_df.replace(np.nan, None)
         pitching_df = pitching_df.replace(np.nan, None)
-        # Step 4: Validate Data
-        # try:
-        #     validated_players = PlayerSchema.validate(players_df)
-        #     validated_pitching = PitchingSchema.validate(pitching_df)
-        #     print("✅ Data validation successful!")
-        # except pa.errors.SchemaError as e:
-        #     print("❌ Data validation failed!", e)
-        #     return
 
-
-        # ---------- Create Model objects from the DataFrames and load ----------
+        # ========== Create Model objects from the DataFrames and load ==========
         self.stdout.write('Loading data...')
         with transaction.atomic():  # Ensures all inserts happen or none
             player_update_fields = [field.name for field in Player._meta.get_fields() if field.concrete and field.name != "id"]
