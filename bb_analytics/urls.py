@@ -22,33 +22,3 @@ urlpatterns = [
     path('players/', include('player_data.urls')),
 ]
 
-[
-    {
-        "id": 671096,
-        "name_first": "Andrew",
-        "name_use": "Andrew",
-        "stats": {
-            "batting": [],
-            "pitching": [
-                {
-                    "year": 2024,
-                    "league": "NL"
-                }
-            ]
-        }
-    },
-    {
-        "id": 671097,
-        "name_first": "Bob",
-        "name_use": "Andrew",
-        "stats": {
-            "batting": [],
-            "pitching": [
-                {
-                    "year": 2023,
-                    "league": "AL"
-                }
-            ]
-        }
-    }
-]
