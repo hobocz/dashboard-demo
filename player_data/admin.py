@@ -12,4 +12,4 @@ class BattingAdmin(admin.ModelAdmin):
 
 @admin.register(Pitching)
 class PitchingAdmin(admin.ModelAdmin):
-  list_display = ['year', 'wins']
+  list_display = ['player', 'year', 'org_abbreviation']

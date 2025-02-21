@@ -1,5 +1,11 @@
 from django.db import models
 
+"""
+A lot more validation/constraints can be added here at the DB level.
+This is just a guess at basic reasonable constraints.
+NOTE: Where null values exist in the orignal data, they are
+allowed to remain null here.
+"""
 
 class Player(models.Model):
     id = models.IntegerField(primary_key=True)
