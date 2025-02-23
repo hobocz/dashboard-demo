@@ -73,16 +73,18 @@ class Command(BaseCommand):
             self.stdout.write('--- Substituting "unknown" and continuing...')
             players_df['name_last'] = players_df['name_last'].fillna('unknown')
             players_df['name_last'] = players_df['name_last'].replace('', 'unknown')
-            # or return?
+            # return?
         # Check player height: not null
         players_issues = players_df[players_df['height_inches'].isna()]
         if len(players_issues) > 0:
             self.stdout.write('++++++++++++++++++++')
             self.stdout.write('The following players do not have a "height_inches" value:')
             print(players_issues[['id','name_first', 'name_last', 'height_inches']])
-            self.stdout.write('--- Substituting 0 and continuing...')
-            players_df['height_inches'] = players_df['height_inches'].fillna(0)
-            # or return?
+            self.stdout.write('--- No transform and continuing...')
+            # OR...
+            # self.stdout.write('--- Substituting 0 and continuing...')
+            # players_df['height_inches'] = players_df['height_inches'].fillna(0)
+            # return?
         # Check player team: is valid from list
         team_list = ['BAL', 'BOS', 'NYY', 'TB', 'TOR', 'CWS', 'CLE', 'DET',
                      'KC', 'MIN', 'HOU', 'LAA', 'OAK', 'SEA', 'TEX', 'ATL', 
@@ -94,7 +96,7 @@ class Command(BaseCommand):
             self.stdout.write('The following players don\'t have a recognized "team" value:')
             print(players_issues[['id','name_first', 'name_last', 'team']])
             self.stdout.write('--- No transform and continuing...')
-            # or return?
+            # return?
 
         # After the above transformations, replace all NaN with None
         # (loading process doesn't understand NaN)
