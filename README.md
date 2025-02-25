@@ -1,6 +1,6 @@
 <a id="readme-top"></a>
 
-
+<img src="./public/kcr_logo.png" width="100">
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -8,155 +8,135 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#omissions">Omissions</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
+    <li><a href="#installation">Installation</a></li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#documentation">Documentation</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#models">Models</a></li>
+        <li><a href="#api">API</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-KCR LOGO HERE
-
-- Why chose pandas for etl, not fancy stuff
-- No type hinting
-- Searching & filering is done client-side since the total data load is so small
-- Don't click select all. Refresh to clear the chart
-- not responsive
-- No CSS library (bootstrap)
-
-- Default port numbers are used
-- installed CORS middleware & allowed Vite server as origin
-
-- ETL is contained in player_data/management/commands/load_player_data.py
-...explain
-Things like Spark, dbt, Airflow etc, all seemed totally
-        out of scope. So pandas is used for validation and transformation... and to
-        demonstrate proficiency with pandas!
-        (it's always useful to have pandas in your back pocket :)
-
-I don't adhere strictly to 72 chars...
-
-Table of REST API urls
+- This is a webapp whose primary frameworks are Django and Vue.
+- The project is in a "developer" stage only. There is no distribution. It is currently meant to run using the Django development server as the backend service and the Vite develpment server as the webserver for the frontend.
+- The database is Django's default SQLite. Other options seemed out of scope.
+- For the ETL, tools like Spark, dbt, Airflow etc, also all seemed out of scope. Therefore python **pandas** is used for the transformation and validation. This seemed a little more reasonable.
+    - The need is small.
+    - It allows the ETL process to be easily implemented as a custom Django admin command.
+    - It allows me to demonstrate proficiency with pandas because *(it's always useful to have pandas in your back pocket)* :panda_face:
+- The project is essentially made of 2 Vue.js components in a parent-child relationship. These are placed in a minimal page framework for purposes of the demo. In the future I'd like to integrate these components (and more) into a cool template like [this](https://demos.creative-tim.com/vue-black-dashboard/)
+- Quick note: In my code I don't adhere strictly to 72 char lines. It's so short! I usualy shoot for around 80ish. However I'm perfectly happy to adhere to any code standards, use formatters, prettifiers, etc.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### Omissions
 
+There are lots of things which could or should be included in a production level project, but they are not included here for a number of reasons: time contraint, out of scope, or potentially not implemented within the group/dept.
+Examples:
+- Unit testing
+- Type hinting
+- Responsive UI
+- CSS framework
+
+I am capable of implementing these things (and would advocate for them), they're just included here.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+Languages & environments:
+- Python 3.12.5
+- Node 23.7.0
+- Implemented and tested on Ubuntu Linux 24.04
 
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+Packages:
+- Django 5.1.6
+- Django Rest Framework 3.15.2
+- pandas==2.2.3
+- Vue 3.5.13
+- ChartJS 4.4.8
+- vue-chartjs 5.3.2
+- vue3-easy-data-table 1.5.47
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Installation
+
+*The following assumes `pip` and `npm` as the package managers*
+
+After cloning the repo and changing to the KCR directory:
+
+For the backend:
+1. Create and activate a python virtual environment
+2. Upgrade pip:
+    - `python -m pip install --upgrade pip`
+3. Install the python packages:
+    - `pip install -r requirements.txt`
+4. Make the Django DB migrations & migrate:
+    - `python manage.py makemigrations`
+    - `python manage.py migrate`
+5. Optionally create a superuser for the Django admin:
+    - `python manage.py createsuperuser`
+6. Load the demo data using the included custom Django admin command. Note that some validation warnings will appear. This is intentional for demo purposes and they are ignored:
+    - `python manage.py load_player_data ./data/players.json`
+7. Run the Django dev server:
+    - `python manage.py runserver`
+8. The Django rest Framework provides an interface which can be used for testing the API. Eg: [http://127.0.0.1:8000/players/](http://127.0.0.1:8000/players/) (See below for endpoints)
+
+For the frontend (in a seperate shell):
+
+1. Install the packages:
+    - `npm install`
+2. Run the Vite dev server:
+    - `npm run dev`
+3. The UI should now be accessable from: [http://localhost:5173/](http://localhost:5173/)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Documentation
+
+- Default port numbers are used for both the Django dev server and Vite dev server.
+- CORS is installed in Django and the Vite server allowed as origin.
+
+### Models
+
+Given the structure of the JSON data, the following relational architecture was created:
+<img src="">
+![Database ERD](./doc/KCR_ERD.png)
+
+### API
+
+Since the only requirement on the API is data retrieval, only a partial RESTful API was implemented:
+| Method | Endpoint | Description | Response |
+| ---------- | ---------- | ---------- | ---------- |
+| GET | /players/ | Retrieve all players | 200 OK (JSON array of players) |
+| GET | /players/{id}/ | Retrieve a specific player | 200 OK (Player JSON) or 404 Not Found |
+| GET | /players/{id}/stats/ | Retrieve stats for a specific player | 200 OK (Stats JSON) or 404 Not Found |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
-### Installation
-
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
-
-Django:
-1. makemigrations
-2. migrate
-3. python manage.py load_player_data ./data/players.json
-4. python manage.py runserver
-
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- LICENSE -->
 ## License
 
-Distributed under the Unlicense License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
-<!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+Chris Zaleski - zaleski.chris@gmail.com
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Project Link: [https://github.com/hobocz/KCR](https://github.com/hobocz/KCR)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
-[product-screenshot]: images/screenshot.png
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[Next-url]: https://nextjs.org/
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[React-url]: https://reactjs.org/
-[Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
-[Vue-url]: https://vuejs.org/
-[Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
-[Angular-url]: https://angular.io/
-[Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
-[Svelte-url]: https://svelte.dev/
-[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-[Laravel-url]: https://laravel.com
-[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com 
