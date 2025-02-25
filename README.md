@@ -33,7 +33,7 @@
 - For the ETL, tools like Spark, dbt, Airflow etc, also all seemed out of scope. Therefore python **pandas** is used for the transformation and validation. This seemed a little more reasonable.
     - The need is small.
     - It allows the ETL process to be easily implemented as a custom Django admin command.
-    - It allows me to demonstrate proficiency with pandas because *(it's always useful to have pandas in your back pocket)* :panda_face:
+    - It allows me to demonstrate proficiency with pandas because it's always useful to have pandas in your back pocket :panda_face:
 - The project is essentially made of 2 Vue.js components in a parent-child relationship. These are placed in a minimal page framework for purposes of the demo. In the future I'd like to integrate these components (and more) into a cool template like [this](https://demos.creative-tim.com/vue-black-dashboard/)
 - Quick note: In my code I don't adhere strictly to 72 char lines. It's so short! I usualy shoot for around 80ish. However I'm perfectly happy to adhere to any code standards, use formatters, prettifiers, etc.
 
@@ -111,7 +111,6 @@ For the frontend (in a seperate shell):
 ### Models
 
 Given the structure of the JSON data, the following relational architecture was created:
-<img src="">
 ![Database ERD](./doc/KCR_ERD.png)
 
 ### API
