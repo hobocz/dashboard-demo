@@ -6,11 +6,11 @@ from django.http import Http404
 from collections import namedtuple
 
 
-"""
-DRF provides ViewSets, mixins, 'already mixed-in generic views',
-etc. With a more fully implemented API these could/should be used.
-But here since we only need simple data retrieval the basic 
-APIView is used.
+""" Simple class views
+
+Django Rest Framework provides ViewSets, mixins, 'already mixed-in generic views',
+etc. With a more fully implemented API these could/should be used. However since 
+we only need simple data retrieval, the basic APIView is used here.
 """
 
 class PlayerList(APIView):
@@ -32,10 +32,11 @@ class PlayerDetail(APIView):
 
 class PlayerStats(APIView):
     def get(self, request, id, format=None):
-        try:
+        try: # make sure the player exists first
             player_detail = Player.objects.get(id=id)
         except Player.DoesNotExist:
             raise Http404
+        # Creating a namedtuple structure for the StatsSerializer
         PlayerStats = namedtuple('PlayerStats', ('batting', 'pitching'))
         stats = PlayerStats(
             batting = Batting.objects.filter(player=id),

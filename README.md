@@ -42,6 +42,18 @@ KCR LOGO HERE
 - not responsive
 - No CSS library (bootstrap)
 
+- Default port numbers are used
+- installed CORS middleware & allowed Vite server as origin
+
+- ETL is contained in player_data/management/commands/load_player_data.py
+...explain
+Things like Spark, dbt, Airflow etc, all seemed totally
+        out of scope. So pandas is used for validation and transformation... and to
+        demonstrate proficiency with pandas!
+        (it's always useful to have pandas in your back pocket :)
+
+I don't adhere strictly to 72 chars...
+
 Table of REST API urls
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

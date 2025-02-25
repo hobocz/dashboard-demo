@@ -9,11 +9,8 @@ from player_data.models import Player, Batting, Pitching
 class Command(BaseCommand):
     """ Performs a simple ETL process for the purposes of this demo project
 
-    1. Extract = simply uses json.load() & then parses the data into pandas DataFrames
-    2. Transform = Things like Spark, dbt, Airflow etc, all seemed totally
-        out of scope. So pandas is used for validation and transformation... and to
-        demonstrate proficiency with pandas!
-        (it's always useful to have pandas in your back pocket :)
+    1. Extract = uses json.load() & then parses the data into pandas DataFrames
+    2. Transform = (also validation) uses pandas
     3. Load = uses Django ORM
     """
     help = 'Performs a simple ETL process for player data'
@@ -24,7 +21,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # ========== EXTRACT ==========
         # Read and parse the data into 3 pandas DataFrames
-        # Each DataFrame correlates to a Model
+        # NOTE: each DataFrame correlates directly to a Model
         self.stdout.write('Importing file...')
         with open(options['data_file'], 'r') as f:
             file_data = json.load(f)
@@ -56,33 +53,35 @@ class Command(BaseCommand):
         self.stdout.write('Validation & transformation...')
         # Check for player IDs: not null and numeric
         players_issues = players_df[(players_df['id'].isna()) | 
-                                    (~players_df['id'].apply(lambda x: isinstance(x,(int,float))))]
+                                    (~players_df['id'].apply(
+                                        lambda x: isinstance(x,(int,float))
+                                    ))]
         if len(players_issues) > 0:
-            self.stdout.write('++++++++++++++++++++')
-            self.stdout.write('The following players have an invalid "id" value:')
+            self.stdout.write('========== ERROR ==========')
+            self.stdout.write('Players with invalid "id" value:')
             print(players_issues[['id','name_first', 'name_last']])
             self.stdout.write('!!! Process cancelled !!!')
             return
-        # Check player last name: not null and not empty string
+        # Check player last name: not null and non-empty string
         players_issues = players_df[(players_df['name_last'].isna()) | 
                                     (players_df['name_last'].str.len() == 0)]
         if len(players_issues) > 0:
-            self.stdout.write('++++++++++++++++++++')
-            self.stdout.write('The following players do not have a "name_last" value:')
+            self.stdout.write('========== WARNING ==========')
+            self.stdout.write('Players without a "name_last" value:')
             print(players_issues[['id','name_first', 'name_last']])
-            self.stdout.write('--- Substituting "unknown" and continuing...')
+            self.stdout.write('>>> Substituting "unknown" and continuing...')
             players_df['name_last'] = players_df['name_last'].fillna('unknown')
             players_df['name_last'] = players_df['name_last'].replace('', 'unknown')
             # return?
         # Check player height: not null
         players_issues = players_df[players_df['height_inches'].isna()]
         if len(players_issues) > 0:
-            self.stdout.write('++++++++++++++++++++')
-            self.stdout.write('The following players do not have a "height_inches" value:')
+            self.stdout.write('========== WARNING ==========')
+            self.stdout.write('Players without a "height_inches" value:')
             print(players_issues[['id','name_first', 'name_last', 'height_inches']])
-            self.stdout.write('--- No transform and continuing...')
+            self.stdout.write('>>> No transform and continuing...')
             # OR...
-            # self.stdout.write('--- Substituting 0 and continuing...')
+            # self.stdout.write('>>> Substituting 0 and continuing...')
             # players_df['height_inches'] = players_df['height_inches'].fillna(0)
             # return?
         # Check player team: is valid from list
@@ -92,14 +91,14 @@ class Command(BaseCommand):
                      'STL', 'ARI', 'COL', 'LAD', 'SD', 'SF']
         players_issues = players_df[~players_df['team'].isin(team_list)]
         if len(players_issues) > 0:
-            self.stdout.write('++++++++++++++++++++')
-            self.stdout.write('The following players don\'t have a recognized "team" value:')
+            self.stdout.write('========== WARNING ==========')
+            self.stdout.write('Players without a recognized "team" value:')
             print(players_issues[['id','name_first', 'name_last', 'team']])
-            self.stdout.write('--- No transform and continuing...')
+            self.stdout.write('>>> No transform and continuing...')
             # return?
 
         # After the above transformations, replace all NaN with None
-        # (loading process doesn't understand NaN)
+        # (Django ORM doesn't like NaN)
         players_df = players_df.replace(np.nan, None)
         batting_df = batting_df.replace(np.nan, None)
         pitching_df = pitching_df.replace(np.nan, None)
@@ -108,15 +107,21 @@ class Command(BaseCommand):
         # Create Model objects from the DataFrames and load
         self.stdout.write('Loading data...')
         with transaction.atomic():
-            # Since Player objects come with a unique id, we can use 
+            # Since Players come with a unique id, we can use 
             # bulk_create() to do a 'create or update' process, preserving
             # the orignal database assigned ids (if we ever need them)
-            player_update_fields = [field.name for field in Player._meta.get_fields() if field.concrete and field.name != "id"]
+            player_update_fields = [field.name for field in Player._meta.get_fields()
+                                     if field.concrete and field.name != "id"]
             player_list = []
             for _, row in players_df.iterrows():
                 row_dict = row.to_dict()
                 player_list.append(Player(**row_dict))
-            player_result = Player.objects.bulk_create(player_list, update_conflicts=True, update_fields=player_update_fields, unique_fields=['id'])
+            player_result = Player.objects.bulk_create(
+                player_list, 
+                update_conflicts=True, 
+                update_fields=player_update_fields, 
+                unique_fields=['id']
+            )
             self.stdout.write(f'Player create/update count: {len(player_result)}')
 
             # However Batting and Pitching objects don't come with unique ids,

@@ -3,6 +3,10 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from . import views
 
 
+""" We only need Read operations
+
+Endoints documented in the README
+"""
 urlpatterns = [
     path('', views.PlayerList.as_view(), name = 'player_list'),
     path('<int:id>/', views.PlayerDetail.as_view(), name = 'player_detail'),

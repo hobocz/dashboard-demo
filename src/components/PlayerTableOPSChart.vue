@@ -1,7 +1,6 @@
 <script setup>
-
-import { ref, onMounted, defineExpose, watch } from 'vue'
-import { Line } from 'vue-chartjs'
+import { ref, defineExpose, watch } from "vue"
+import { Line } from "vue-chartjs"
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -10,7 +9,7 @@ import {
     LineElement,
     Title,
     Tooltip,
-    Legend } from 'chart.js'
+    Legend } from "chart.js"
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -21,9 +20,9 @@ ChartJS.register(
     Legend
 )
 
-
+// Simple color generator
 function* getColorGenerator() {
-  const colorPalette = ['#FF5733', '#33FF57', '#3357FF', '#F3C300', '#A133FF'];
+  const colorPalette = ["#FF5733", "#33FF57", "#3357FF", "#F3C300", "#A133FF"];
   let index = 0;
   while (true) {
     yield colorPalette[index % colorPalette.length];
@@ -32,9 +31,10 @@ function* getColorGenerator() {
 }
 const getColor = getColorGenerator();
 
+// The selected player data passed from the parent component
 const selectedPlayers = ref([])
 defineExpose({selectedPlayers});
-
+// Chart data and options
 const chartData = ref({})
 const chartOptions = {
     responsive: true,
@@ -42,7 +42,9 @@ const chartOptions = {
 }
 const loaded = ref(false)
 
-
+// This class is used to aggregate batting data objects across
+// years, and offer some advanced stats.
+// Used by parsePlayerBattingData()
 class YearlyBattingStats{
     B1 = 0
     B2 = 0
@@ -69,22 +71,23 @@ class YearlyBattingStats{
     }
 
     OBP(){
-        return (this.H + this.BB) / (this.AB + this.BB + this.SF)
+        const result = (this.H + this.BB) / (this.AB + this.BB + this.SF)
+        return isNaN(result) ? 0 : parseFloat(result.toFixed(3))
     }
 
     SLG(){
-        return this.totalBases() / this.AB
+        const result = this.totalBases() / this.AB
+        return isNaN(result) ? 0 : parseFloat(result.toFixed(3))
     }
 
     OPS(){
-        const result = (this.OBP() + this.SLG()).toFixed(3)
-        return isNaN(result) ? 0 : result
+        return this.OBP() + this.SLG()
     }
 }
 
+// Used by watch(selectedPlayers, ...)
 const parsePlayerBattingData = (playerNameStats, newChartData) => {
-    // Aggregate common years across the objects and 
-    // create a YearlyBattingStats object for each year
+    // Create a YearlyBattingStats object for each year
     const statsByYear = {}
     playerNameStats.battingStats.forEach((battingStat) => {
         if (!statsByYear.hasOwnProperty(battingStat.year)) {
@@ -105,13 +108,17 @@ const parsePlayerBattingData = (playerNameStats, newChartData) => {
     newChartData.datasets.push(newData)
 }
 
+// Watch the selectedPlayers for changes.
+// On change, fetch each player's stats
 watch(selectedPlayers, (updatedPlayers) => {
+    // This is wrapped in an async IIFE to get the intended order of operations
     (async () => {
         if (updatedPlayers.length > 5) { return }
         const newChartData = {labels: [], datasets: []}
         const yearSet = new Set()
         const allPlayersBattingStats = []
-        // updatedPlayers.forEach( async (player) => {
+        // Running the loop like this instead of forEach, so the subsequent code
+        // waits on everything before executing
         await Promise.all(updatedPlayers.map(async (player) => {
             const response = await fetch(`http://127.0.0.1:8000/players/${player.id}/stats`)
             const playerStats = await response.json()
@@ -133,27 +140,25 @@ watch(selectedPlayers, (updatedPlayers) => {
             parsePlayerBattingData(playerNameStats, newChartData)
         })
         
+        // Replace the old chart data with the new
         chartData.value = newChartData
         loaded.value = true
     })();
 }, { deep: true })
-
 </script>
-
 
 <template>
     <div id="chartContainer">
-        <Line v-if="loaded" :data="chartData" :options="chartOptions" />
-        <!-- <h3 v-else id="loading">Loading...</h3> -->
+        <Line 
+            v-if="loaded" 
+            :data="chartData" 
+            :options="chartOptions" 
+        />
     </div>
 </template>
-
 
 <style scoped>
 #chartContainer{
     background-color: white;
-}
-#loading {
-    color: black;
 }
 </style>

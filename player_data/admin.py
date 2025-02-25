@@ -2,6 +2,9 @@ from django.contrib import admin
 from .models import Player, Batting, Pitching
 
 
+""" Nothing fancy, just the basics :)
+"""
+
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
   list_display = ['name_first', 'name_last']

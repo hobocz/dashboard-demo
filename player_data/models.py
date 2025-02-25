@@ -1,8 +1,11 @@
 from django.db import models
 
 """
-A lot more validation/constraints can be added here at the DB level.
-This is just a guess at basic reasonable constraints.
+A lot more constraints could be added here at the DB level, 
+this is just a guess at basic reasonable constraints.
+
+Also additional indexes could be added depending on queries.
+
 NOTE: Where null values exist in the orignal data, they are
 allowed to remain null here.
 """
@@ -58,10 +61,9 @@ class Batting(models.Model):
     caught_stealing = models.PositiveSmallIntegerField()
     
     class Meta:
-        ordering = ['player', 'year']
+        ordering = ['year']
         indexes = [
             models.Index(fields=['org_abbreviation']),
-            models.Index(fields=['runs']),
         ]
 
 
@@ -95,5 +97,4 @@ class Pitching(models.Model):
         ordering = ['year']
         indexes = [
             models.Index(fields=['org_abbreviation']),
-            models.Index(fields=['wins']),
         ]
