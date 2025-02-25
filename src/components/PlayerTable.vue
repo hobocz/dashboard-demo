@@ -1,15 +1,18 @@
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import Vue3EasyDataTable from 'vue3-easy-data-table';
 import 'vue3-easy-data-table/dist/style.css';
-import PlayerOPSChart from './PlayerOPSChart.vue'
+import PlayerBattingChart from './PlayerBattingChart.vue'
 
 
 const rowsSelected = ref([]);
 const defaultSortBy = "name_last";
 const searchField = ["name_first", "name_last"];
 const searchValue = ref("");
+const clearInput = () => {
+    searchValue.value = '';
+};
 const headers = [
     // { text: "ID", value: "id" },
     { text: "First Name", value: "name_first" },
@@ -37,6 +40,7 @@ const posNames = {
     "O": "Offence",
     "D": "Defense",
 }
+const battingChartRef = ref(null);
 
 onMounted(async () => {
     const response = await fetch("http://127.0.0.1:8000/players/")
@@ -58,84 +62,98 @@ onMounted(async () => {
     })
 })
 
-const getPlayerStats = async (index) => {
-    const expandedItem = items.value[index];    
-    if (!expandedItem.stats) {
-        expandedItem.expandLoading = true;
-        const response = await fetch(`http://127.0.0.1:8000/players/${items.value[index].id}/stats`)
-        expandedItem.stats = await response.json()
-        expandedItem.expandLoading = false
-    }
-}
+watch(rowsSelected, (updatedRows) => {
+    // Watch Vue3EasyDataTable's rowsSelected and update the child component on change.
+    battingChartRef.value.selectedPlayers = updatedRows
+}, { deep: true })
 
 </script>
 
 
 <template>
-    <div class="tableNotes">
-    <span>Name search:&nbsp;</span>
-    <input type="text" v-model="searchValue">
-    <span id="headerNote">Select sorting available in the header</span>
-    </div>
-    <div id="tableContainer">    
-        <Vue3EasyDataTable
-        v-model:items-selected="rowsSelected"
-        hide-header-selection
-        :table-min-height=80
-        :headers="headers"
-        :items="items"
-        :sort-by="defaultSortBy"
-        :search-field="searchField"
-        :search-value="searchValue"
-        @expand-row="getPlayerStats"
-        alternating
-        buttons-pagination
-        :rows-per-page=10
-        :rows-items=[10,25]
-        table-class-name="customize-table"
-        >
-            <template #empty-message>
-                Loading...
-            </template>
-            <!-- <template #expand="item">
-            <div>
-                {{ item.stats }}
-            </div>
-            </template> -->
-        </Vue3EasyDataTable>
-    </div>
-    <div class="tableNotes" v-if="rowsSelected.length > 10">
-        No more than 10 players can be selected at once
-    </div>
-    <div v-else-if="rowsSelected.length > 0">
-        <div class="tableNotes">Player OPS:</div>
-        <div v-for="player in rowsSelected" :key="player.id" class="playerOPS">
-            <PlayerOPSChart :player="player" />
+    <div id="compContainer">
+        <div class="tableNotes vspace">
+            <span>Name search:&nbsp;</span>
+            <input type="text" v-model="searchValue">
+            <span @click="clearInput" id="clearButton">Clear</span>
+            <span id="headerNote">Select sorting available in the table header</span>
+        </div>
+        <div id="tableContainer">    
+            <Vue3EasyDataTable
+            v-model:items-selected="rowsSelected"
+            hide-header-selection
+            :table-min-height=80
+            :headers="headers"
+            :items="items"
+            :sort-by="defaultSortBy"
+            :search-field="searchField"
+            :search-value="searchValue"
+            alternating
+            buttons-pagination
+            :rows-per-page=10
+            :rows-items=[10,25]
+            table-class-name="customize-table"
+            >
+                <template #empty-message>
+                    Loading...
+                </template>
+            </Vue3EasyDataTable>
+        </div>
+        
+        <div v-if="rowsSelected.length > 5" class="tableNotes">
+            No more than 5 players can be queried at once
+        </div>
+        <div v-else class="tableNotes">Select up to 5 players to compare OPS by year</div>
+        <div v-show="rowsSelected.length > 0" id="chartContainer">
+            <PlayerBattingChart ref="battingChartRef" />
         </div>
     </div>
 </template>
 
 
 <style scoped>
-/* #tableContainer {
-    max-height: 500px;
-    overflow: scroll;
-} */
+#compContainer{
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+#tableContainer {
+    border: 4px solid #BD9B60;
+    border-radius: 5px;
+}
+#chartContainer {
+    min-height: 200px;
+    height: 300px;
+}
 .tableNotes {
     text-align: left;
     font-weight: bold;
     margin-top: .5em;
     margin-bottom: .5em;
 }
+.vspace {
+    padding-top: 1em;;
+}
 #headerNote {
     float: right;
     font-size: small;
     font-style: italic;
 }
+#clearButton{
+    margin-left: .5em;
+    font-size: small;
+    background-color: lightgray;
+    color: black;
+    padding: .3em;
+    border-radius: 5px;
+}
+#clearButton:hover {
+    cursor: pointer;
+}
 .playerOPS {
     margin-bottom: .5em;
 }
 .customize-table {
+    --easy-table-border: 1px solid #BD9B60;
     --easy-table-header-font-color: white;
     --easy-table-header-background-color: #BD9B60;
 }

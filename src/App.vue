@@ -1,11 +1,16 @@
 <script setup>
+
+import Header from './components/Header.vue'
 import PlayerTable from './components/PlayerTable.vue'
 
 </script>
 
+
 <template>
+  <Header />
   <PlayerTable />
 </template>
+
 
 <style scoped>
 .logo {

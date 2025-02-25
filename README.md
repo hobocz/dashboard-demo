@@ -38,6 +38,9 @@ KCR LOGO HERE
 - Why chose pandas for etl, not fancy stuff
 - No type hinting
 - Searching & filering is done client-side since the total data load is so small
+- Don't click select all. Refresh to clear the chart
+- not responsive
+- No CSS library (bootstrap)
 
 Table of REST API urls
 
