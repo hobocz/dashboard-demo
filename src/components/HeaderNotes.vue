@@ -22,6 +22,10 @@ const showNotes = ref(true)
                 column header) </li>
             <li>Use the checkboxes to select up to 5 players. Players' 
                 OPS-by-year will be compared in a chart.</li>
+            <li>NOTE: The OPS calculation does not include HBP as this 
+                was not included in the original data. Also the assumption 
+                was made that singles could be calculated by:
+                1B = H - 2B - 3B - HR</li>
         </ul>
         <div class="notes-section top-space">Todos:</div>
         <ul>
