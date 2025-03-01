@@ -9,7 +9,8 @@ import {
     LineElement,
     Title,
     Tooltip,
-    Legend } from "chart.js"
+    Legend,
+    Colors } from "chart.js"
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -20,16 +21,7 @@ ChartJS.register(
     Legend
 )
 
-// Simple color generator
-function* getColorGenerator() {
-  const colorPalette = ["#FF5733", "#33FF57", "#3357FF", "#F3C300", "#A133FF"];
-  let index = 0;
-  while (true) {
-    yield colorPalette[index % colorPalette.length];
-    index++;
-  }
-}
-const getColor = getColorGenerator();
+ChartJS.register(Colors);
 
 // The selected player data passed from the parent component
 const selectedPlayers = ref([])
@@ -38,7 +30,13 @@ defineExpose({selectedPlayers});
 const chartData = ref({})
 const chartOptions = {
     responsive: true,
-    maintainAspectRatio: false
+    maintainAspectRatio: false,
+    plugins: {
+    colors: {
+        enabled: true,
+        forceOverride: true
+    }
+  }
 }
 const loaded = ref(false)
 
@@ -98,7 +96,6 @@ const parsePlayerBattingData = (playerNameStats, newChartData) => {
     // Iterate the YearlyBattingStats and add the data to the newChart
     const newData = {
         label: playerNameStats.playerName,
-        backgroundColor: getColor.next().value,
         data: new Array(newChartData.labels.length).fill(null)
     }
     for (const [year, stats] of Object.entries(statsByYear)) {

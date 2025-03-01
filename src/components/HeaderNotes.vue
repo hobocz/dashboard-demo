@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-const showNotes = ref(true)
+const showNotes = ref(false)
 </script>
 
 <template>
