@@ -1,32 +1,38 @@
 <script setup>
 import { ref, onMounted, watch } from "vue"
-import Vue3EasyDataTable from "vue3-easy-data-table";
-import "vue3-easy-data-table/dist/style.css";
 import PlayerTableOPSChart from "./PlayerTableOPSChart.vue"
 
+import { AllCommunityModule, ModuleRegistry, themeBalham } from 'ag-grid-community'; 
+ModuleRegistry.registerModules([AllCommunityModule]);
+import { AgGridVue } from "ag-grid-vue3";
 
-// The following variables are all for the chart
-const rowsSelected = ref([]);
-const defaultSortBy = "name_last";
-const searchField = ["name_first", "name_last"];
-const searchValue = ref("");
-const clearInput = () => {
-    searchValue.value = "";
+
+const gridRef = ref(null);
+const autoSizeStrategy = {
+    type: 'fitGridWidth'
+}
+const rowSelection = { 
+    mode: 'multiRow' ,
+    headerCheckbox: false,
 };
-const headers = [
-    // { text: "ID", value: "id" }, // optional
-    { text: "First Name", value: "name_first" },
-    { text: "Last Name", value: "name_last", sortable: true },
-    { text: "Use Name", value: "name_use" },
-    { text: "Team", value: "team", sortable: true },
-    { text: "Birth Date", value: "birth_date" },
-    { text: "Height", value: "height_total"},
-    { text: "Weight", value: "weight" },
-    { text: "Throws", value: "throws" },
-    { text: "Bats", value: "bats" },
-    { text: "Primary Pos", value: "primary_position", sortable: true },
-];
-const items = ref([])
+const selectionColumnDef = {
+    sortable: true,
+    resizable: false,
+    width: 60
+};
+const columnDefs = ref([
+    { field: "name_first", headerName: "First Name" },
+    { field: "name_last", headerName: "Last Name", filter: true },
+    { field: "name_use", headerName: "Use Name" },
+    { field: "team", headerName: "Team", filter: true },
+    { field: "birth_date", headerName: "Birth Date", filter: true },
+    { field: "height_total", headerName: "Height" },
+    { field: "weight", headerName: "Weight" },
+    { field: "throws", headerName: "Throws", filter: true },
+    { field: "bats", headerName: "Bats", filter: true },
+    { field: "primary_position", headerName: "Primary Pos", filter: true },
+]);
+const rowData = ref([]);
 const posNames = {
     "1": "Pitcher",
     "2": "Catcher",
@@ -47,9 +53,9 @@ const battingChartRef = ref(null);
 onMounted(async () => {
     const response = await fetch("http://127.0.0.1:8000/players/")
     const playerData = await response.json()
-    items.value = playerData.map((player) => {
+    rowData.value = playerData.map((player) => {
         return {
-            id: player.id, 
+            id: player.id,
             name_first: player.name_first,
             name_last: player.name_last,
             name_use: `"${player.name_use}"`,
@@ -66,58 +72,45 @@ onMounted(async () => {
     })
 })
 
-// Watch the table's "rowsSelected" and update the child component on change
-watch(rowsSelected, (updatedRows) => {
-    battingChartRef.value.selectedPlayers = updatedRows
-}, { deep: true })
+const onSelectionChanged = () => {
+    const selectedRows = gridRef.value.api.getSelectedRows()
+    battingChartRef.value.selectedPlayers = selectedRows
+};
 </script>
 
 <template>
     <div id="componentContainer">
-        <div class="tableNotes">
-            <span>Name search:&nbsp;</span>
-            <input type="text" v-model="searchValue">
-            <span @click="clearInput" id="clearButton">Clear</span>
-        </div>
-        <div id="tableContainer">    
-            <Vue3EasyDataTable
-                v-model:items-selected="rowsSelected"
-                hide-header-selection
-                :table-min-height="80"
-                :headers="headers"
-                :items="items"
-                :sort-by="defaultSortBy"
-                :search-field="searchField"
-                :search-value="searchValue"
-                alternating
-                buttons-pagination
-                :rows-per-page="10"
-                :rows-items="[10,25]"
-                table-class-name="customize-table"
+        <div id="tableContainer">
+            <ag-grid-vue
+                ref="gridRef"
+                :rowData="rowData"
+                :columnDefs="columnDefs"
+                :autoSizeStrategy="autoSizeStrategy"
+                :pagination="true"
+                :paginationPageSize="25"
+                :paginationPageSizeSelector="[25, 50, 100]"
+                :theme="themeBalham"
+                :rowSelection="rowSelection" 
+                @selection-changed="onSelectionChanged"
+                :selectionColumnDef="selectionColumnDef"
+                style="height: 400px"
             >
-                <template #empty-message>
-                    Loading...
-                </template>
-            </Vue3EasyDataTable>
+            </ag-grid-vue>
         </div>
-        <!-- Display the OPS table or appropriate notes -->
-        <div v-if="rowsSelected.length > 5" class="tableNotes">
-            No more than 5 players can be queried at once
-        </div>
-        <div v-else class="tableNotes">Select up to 5 players to compare OPS by year</div>
-        <div v-show="rowsSelected.length > 0" id="chartContainer">
+        <div class="tableNotes">Select players to compare OPS by year...</div>
+        <div id="chartContainer">
             <PlayerTableOPSChart ref="battingChartRef" />
-        </div>
+        </div> 
     </div>
 </template>
 
 <style scoped>
 #componentContainer{
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 1em;
+    padding-right: 1em;
 }
 #tableContainer {
-    border: 4px solid #BD9B60;
+    border: .5em solid #BD9B60;
     border-radius: 5px;
 }
 #chartContainer {
@@ -127,23 +120,6 @@ watch(rowsSelected, (updatedRows) => {
 .tableNotes {
     text-align: left;
     font-weight: bold;
-    margin-top: .5em;
-    margin-bottom: .5em;
-}
-#clearButton{
-    margin-left: .5em;
-    font-size: small;
-    background-color: lightgray;
-    color: black;
-    padding: .3em;
-    border-radius: 5px;
-}
-#clearButton:hover {
-    cursor: pointer;
-}
-.customize-table {
-    --easy-table-border: 1px solid #BD9B60;
-    --easy-table-header-font-color: white;
-    --easy-table-header-background-color: #BD9B60;
+    margin: .2em;
 }
 </style>

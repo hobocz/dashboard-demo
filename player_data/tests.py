@@ -39,9 +39,9 @@ class PlayerAPITestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'name_last', status_code=200)
         self.assertNotContains(response, None, status_code=200)
-        first_name = response.json()[0]['name_first']
+        first_name = response.json()[0].get('name_first')
         self.assertEqual(first_name, 'George')
-        id_val = response.json()[0]['id']
+        id_val = response.json()[0].get('id')
         self.assertTrue(isinstance(id_val, int))
 
     def test_retrieve_player(self):
@@ -51,5 +51,7 @@ class PlayerAPITestCase(APITestCase):
     # Serializer Validation Test
     def test_invalid_serializer(self):
         serializer = PlayerSerializer(instance=self.player)
-        self.assertEqual(serializer.data['id'], 123)
-        self.assertTrue(isinstance(serializer.data['weight'], int))
+        self.assertTrue(serializer.data.get('id'))
+        self.assertEqual(serializer.data.get('id'), 123)
+        self.assertTrue(serializer.data.get('weight'))
+        self.assertTrue(isinstance(serializer.data.get('weight'), int))

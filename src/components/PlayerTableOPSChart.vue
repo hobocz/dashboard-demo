@@ -20,9 +20,7 @@ ChartJS.register(
     Tooltip,
     Legend
 )
-
 ChartJS.register(Colors);
-
 // The selected player data passed from the parent component
 const selectedPlayers = ref([])
 defineExpose({selectedPlayers});
@@ -122,6 +120,7 @@ watch(selectedPlayers, (updatedPlayers) => {
             const pName = player.name_first + " " + player.name_last
             if (playerStats.batting.length == 0) {
                 alert(`${pName} has no batting stats`)
+                return
             }
             playerStats.batting.forEach((stat) => {
                 yearSet.add(String(stat.year))
