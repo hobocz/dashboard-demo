@@ -66,7 +66,7 @@ Packages:
 - Vue 3.5.13
 - ChartJS 4.4.8
 - vue-chartjs 5.3.2
-- vue3-easy-data-table 1.5.47
+- ag-grid-vue3 33.1.1
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
