@@ -80,7 +80,7 @@ const handleSubmit = async () => {
                 <option v-for="option in yearsList" :key="option" :value="option">
                 {{ option }}
                 </option>
-            </select><span>MLB years</span>
+            </select><span>MLB seasons</span>
             <button type="submit">
             Submit
             </button>
