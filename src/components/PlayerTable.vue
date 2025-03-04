@@ -2,12 +2,11 @@
 import { ref, onMounted } from "vue"
 import PlayerTableOPSChart from "./PlayerTableOPSChart.vue"
 import TopYoungPitchersChart from "./TopYoungPitchersChart.vue";
-
 import { AllCommunityModule, ModuleRegistry, themeBalham } from 'ag-grid-community'; 
 ModuleRegistry.registerModules([AllCommunityModule]);
 import { AgGridVue } from "ag-grid-vue3";
 
-
+// AG Grid related data
 const gridRef = ref(null);
 const autoSizeStrategy = {
     type: 'fitGridWidth'
@@ -74,6 +73,8 @@ onMounted(async () => {
     })
 })
 
+// Respond to AG Grid's selection-changed event. Updates the selected
+// players in the child component
 const onSelectionChanged = () => {
     const selectedRows = gridRef.value.api.getSelectedRows()
     selectCount.value = selectedRows.length

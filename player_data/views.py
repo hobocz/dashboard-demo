@@ -53,18 +53,18 @@ The following is an example of using SQL to query the database
 intead of the Django ORM.
 """
 
-""" 'Top Young Pitchers Query'. Select players who:
-- are 25 years old or younger and
-- average 7 or more pitching wins per year
-- in 5 years or less
-Note that the date related functions work with SQLite
-and may need to change for other DBs
-"""
-
 def cursor_to_dictionaries(cursor):
     columns = [col[0] for col in cursor.description]
     return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
+""" This is the 'Top Young Pitchers Query'. 
+Select players who:
+- are X years old or younger and
+- average X or more pitching wins per year
+- in X years or less
+Note that the date related functions work with SQLite
+and may need to change for other DBs
+"""
 def typ_sql(max_age, min_avg_wins, max_years):
     return f"""
     SELECT 

@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from "vue"
-
 import { AllCommunityModule, ModuleRegistry, themeBalham } from 'ag-grid-community'; 
 ModuleRegistry.registerModules([AllCommunityModule]);
 import { AgGridVue } from "ag-grid-vue3";
 
+// AG Grid related data
 const autoSizeStrategy = {
     type: 'fitGridWidth'
 }
@@ -19,6 +19,7 @@ const columnDefs = ref([
 ]);
 const rowData = ref([]);
 
+// Form related data
 const formData = ref({
     maxAge: null,
     minAvgWins: null,
@@ -29,6 +30,7 @@ const agesList = ref(Array.from({ length: 30 - 20 + 1 }, (_, i) => 20 + i))
 const winsList = ref(Array.from({ length: 10 - 1 + 1 }, (_, i) => 1 + i))
 const yearsList = ref(Array.from({ length: 10 - 1 + 1 }, (_, i) => 1 + i))
 
+// Handle form submission. Populate the table with the results.
 const handleSubmit = async () => {
     if (!formData.value.maxAge || !formData.value.minAvgWins || !formData.value.maxYears) {
         responseMessage.value = "Please make a choice for all options";
@@ -58,7 +60,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-    <div class="form-container">
+    <div class="top-pitchers-container">
         <div class="notes">View top young pitchers who have...</div>
         <form @submit.prevent="handleSubmit">
             <label for="maxAge">1. Maximum age:</label>
@@ -83,7 +85,7 @@ const handleSubmit = async () => {
             Submit
             </button>
         </form>
-        <p v-if="responseMessage" class="response-message">{{ responseMessage }}</p>
+        <div v-if="responseMessage" class="response-message">{{ responseMessage }}</div>
         <div id="tableContainer">
             <ag-grid-vue
                 ref="gridRef"
@@ -102,12 +104,12 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
-.form-container {
+.top-pitchers-container {
     padding: 10px;
     border-top: .2em solid #ddd;
     text-align: left;
 }
-.form-container select {
+.top-pitchers-container select {
     margin-right: .7em;
 }
 label {
@@ -129,9 +131,9 @@ button {
     cursor: pointer;
 }
 .response-message {
-    margin-top: 10px;
     font-weight: bold;
     color: red;
+    margin-bottom: 1em;
 }
 #tableContainer {
     border: .5em solid #BD9B60;
