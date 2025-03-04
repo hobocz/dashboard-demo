@@ -60,13 +60,13 @@ Languages & environments:
 - Implemented and tested on Ubuntu Linux 24.04
 
 Packages:
-- Django 5.1.6
-- Django Rest Framework 3.15.2
-- pandas==2.2.3
-- Vue 3.5.13
-- ChartJS 4.4.8
-- vue-chartjs 5.3.2
-- ag-grid-vue3 33.1.1
+- Django: 5.1.6
+- Django Rest Framework: 3.15.2
+- pandas: 2.2.3
+- Vue: 3.5.13
+- ChartJS: 4.4.8
+- vue-chartjs: 5.3.2
+- ag-grid-vue3: 33.1.1
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
