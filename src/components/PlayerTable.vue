@@ -1,12 +1,12 @@
 <script setup>
-import { ref, onMounted, watch } from "vue"
+import { ref, onMounted } from "vue"
 import PlayerTableOPSChart from "./PlayerTableOPSChart.vue"
-
+import TopYoungPitchersChart from "./TopYoungPitchersChart.vue";
 import { AllCommunityModule, ModuleRegistry, themeBalham } from 'ag-grid-community'; 
 ModuleRegistry.registerModules([AllCommunityModule]);
 import { AgGridVue } from "ag-grid-vue3";
 
-
+// AG Grid related data
 const gridRef = ref(null);
 const autoSizeStrategy = {
     type: 'fitGridWidth'
@@ -48,6 +48,7 @@ const posNames = {
 }
 // Reference to the exposed child data
 const battingChartRef = ref(null);
+const selectCount = ref(0)
 
 // Here we retrieve the player data and assign it to the table "items"
 onMounted(async () => {
@@ -72,14 +73,17 @@ onMounted(async () => {
     })
 })
 
+// Respond to AG Grid's selection-changed event. Updates the selected
+// players in the child component
 const onSelectionChanged = () => {
     const selectedRows = gridRef.value.api.getSelectedRows()
+    selectCount.value = selectedRows.length
     battingChartRef.value.selectedPlayers = selectedRows
 };
 </script>
 
 <template>
-    <div id="componentContainer">
+    <div class="componentContainer">
         <div id="tableContainer">
             <ag-grid-vue
                 ref="gridRef"
@@ -98,16 +102,20 @@ const onSelectionChanged = () => {
             </ag-grid-vue>
         </div>
         <div class="tableNotes">Select players to compare OPS by year...</div>
-        <div id="chartContainer">
+        <div id="chartContainer" v-show="selectCount > 0">
             <PlayerTableOPSChart ref="battingChartRef" />
         </div> 
+    </div>
+    <div class="componentContainer">
+        <TopYoungPitchersChart />
     </div>
 </template>
 
 <style scoped>
-#componentContainer{
+.componentContainer{
     padding-left: 1em;
     padding-right: 1em;
+    margin-bottom: 3em;
 }
 #tableContainer {
     border: .5em solid #BD9B60;

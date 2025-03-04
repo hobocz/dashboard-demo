@@ -11,6 +11,7 @@ urlpatterns = [
     path('', views.PlayerList.as_view(), name = 'player_list'),
     path('<int:id>/', views.PlayerDetail.as_view(), name = 'player_detail'),
     path('<int:id>/stats/', views.PlayerStats.as_view(), name = 'player_stats'),
+    path('top-young-pitchers/', views.TopYoungPitchersView.as_view(), name = 'top_young_pitchers'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

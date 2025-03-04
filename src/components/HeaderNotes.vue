@@ -56,8 +56,6 @@ const showNotes = ref(false)
     color: black;
     padding: .2em;
     border-radius: 5px;
-}
-#notesButton:hover {
     cursor: pointer;
 }
 #notes {
