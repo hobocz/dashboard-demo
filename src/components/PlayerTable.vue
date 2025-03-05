@@ -62,8 +62,9 @@ onMounted(async () => {
             name_use: `"${player.name_use}"`,
             team: player.team,
             birth_date: player.birth_date,
+            // Use '!=' in the below ternary in order to get not null and not undefined
             height_total: `${player.height_feet}' - 
-                ${player.height_inches !== null ? player.height_inches : '?'}"`,
+                ${player.height_inches != null ? player.height_inches : '?'}"`,
             weight: `${player.weight} lbs`,
             throws: player.throws,
             bats: player.bats,
