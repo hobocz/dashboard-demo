@@ -63,7 +63,7 @@ onMounted(async () => {
             team: player.team,
             birth_date: player.birth_date,
             height_total: `${player.height_feet}' - 
-                ${player.height_inches ? player.height_inches : '?'}"`,
+                ${player.height_inches !== null ? player.height_inches : '?'}"`,
             weight: `${player.weight} lbs`,
             throws: player.throws,
             bats: player.bats,
