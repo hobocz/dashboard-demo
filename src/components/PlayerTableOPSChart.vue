@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineExpose, watch } from "vue"
+import { ref, watch } from "vue"
 import { Line } from "vue-chartjs"
 import {
     Chart as ChartJS,
@@ -68,12 +68,12 @@ class YearlyBattingStats{
 
     OBP(){
         const result = (this.H + this.BB) / (this.AB + this.BB + this.SF)
-        return isNaN(result) ? 0 : parseFloat(result.toFixed(3))
+        return (isNaN(result) || result == Infinity) ? 0 : parseFloat(result.toFixed(3))
     }
 
     SLG(){
         const result = this.totalBases() / this.AB
-        return isNaN(result) ? 0 : parseFloat(result.toFixed(3))
+        return (isNaN(result) || result == Infinity) ? 0 : parseFloat(result.toFixed(3))
     }
 
     OPS(){
