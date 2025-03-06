@@ -21,6 +21,8 @@ ChartJS.register(
     Legend
 )
 ChartJS.register(Colors);
+
+const apiUrl = import.meta.env.VITE_API_URL;
 // The selected player data passed from the parent component
 const selectedPlayers = ref([])
 defineExpose({selectedPlayers});
@@ -115,7 +117,7 @@ watch(selectedPlayers, (updatedPlayers) => {
         // Running the loop like this instead of forEach, so the subsequent code
         // waits on everything before executing
         await Promise.all(updatedPlayers.map(async (player) => {
-            const response = await fetch(`http://127.0.0.1:8000/players/${player.id}/stats`)
+            const response = await fetch(`${apiUrl}/players/${player.id}/stats`)
             const playerStats = await response.json()
             const pName = player.name_first + " " + player.name_last
             if (playerStats.batting.length == 0) {

@@ -6,6 +6,7 @@ import { AllCommunityModule, ModuleRegistry, themeBalham } from 'ag-grid-communi
 ModuleRegistry.registerModules([AllCommunityModule]);
 import { AgGridVue } from "ag-grid-vue3";
 
+const apiUrl = import.meta.env.VITE_API_URL;
 // AG Grid related data
 const gridRef = ref(null);
 const autoSizeStrategy = {
@@ -52,7 +53,7 @@ const selectCount = ref(0)
 
 // Here we retrieve the player data and assign it to the table "items"
 onMounted(async () => {
-    const response = await fetch("http://127.0.0.1:8000/players/")
+    const response = await fetch(`${apiUrl}/players/`)
     const playerData = await response.json()
     rowData.value = playerData.map((player) => {
         return {

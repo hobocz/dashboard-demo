@@ -4,6 +4,8 @@ import { AllCommunityModule, ModuleRegistry, themeBalham } from 'ag-grid-communi
 ModuleRegistry.registerModules([AllCommunityModule]);
 import { AgGridVue } from "ag-grid-vue3";
 
+
+const apiUrl = import.meta.env.VITE_API_URL;
 // AG Grid related data
 const autoSizeStrategy = {
     type: 'fitGridWidth'
@@ -38,7 +40,7 @@ const handleSubmit = async () => {
     }
     responseMessage.value = "";
 
-    const response = await fetch("http://127.0.0.1:8000/players/top-young-pitchers/", {
+    const response = await fetch(`${apiUrl}/players/top-young-pitchers/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData.value),
