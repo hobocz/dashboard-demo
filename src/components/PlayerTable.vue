@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue"
 import PlayerTableOPSChart from "./PlayerTableOPSChart.vue"
-import TopYoungPitchersChart from "./TopYoungPitchersChart.vue";
+// import TopYoungPitchersChart from "./TopYoungPitchersChart.vue";
 import { AllCommunityModule, ModuleRegistry, themeBalham } from 'ag-grid-community'; 
 ModuleRegistry.registerModules([AllCommunityModule]);
 import { AgGridVue } from "ag-grid-vue3";
@@ -108,15 +108,16 @@ const onSelectionChanged = () => {
             <PlayerTableOPSChart ref="battingChartRef" />
         </div> 
     </div>
-    <div class="componentContainer">
+    <!-- <div class="componentContainer">
         <TopYoungPitchersChart />
-    </div>
+    </div> -->
 </template>
 
 <style scoped>
 .componentContainer{
     padding-left: 1em;
     padding-right: 1em;
+    margin-top: 3em;
     margin-bottom: 3em;
 }
 #tableContainer {

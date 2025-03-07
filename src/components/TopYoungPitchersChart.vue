@@ -62,7 +62,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-    <div class="top-pitchers-container">
+    <div class="componentContainer">
         <div class="notes">View top young pitchers who have...</div>
         <form @submit.prevent="handleSubmit">
             <label for="maxAge">1. Maximum age:</label>
@@ -106,12 +106,13 @@ const handleSubmit = async () => {
 </template>
 
 <style scoped>
-.top-pitchers-container {
-    padding: 10px;
-    border-top: .2em solid #ddd;
-    text-align: left;
+.componentContainer{
+    padding-left: 1em;
+    padding-right: 1em;
+    margin-top: 3em;
+    margin-bottom: 3em;
 }
-.top-pitchers-container select {
+.componentContainer select {
     margin-right: .7em;
 }
 label {
