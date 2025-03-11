@@ -1,0 +1,17 @@
+// Import Bootstrap functions & variables
+@use "bootstrap/scss/functions";
+@use "bootstrap/scss/variables" as *;
+@use "bootstrap/scss/mixins" as *;
+@use "sass:map";
+
+// Define new custom colors
+$custom-colors: (
+  "custom-blue": #004687,
+  "custom-gold": #BD9B60,
+);
+
+// Merge Bootstrap's theme colors with custom colors
+$theme-colors: map.merge($theme-colors, $custom-colors);
+
+// Import Bootstrap styles
+@use "bootstrap/scss/bootstrap";

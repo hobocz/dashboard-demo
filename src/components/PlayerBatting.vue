@@ -1,12 +1,12 @@
 <script setup>
 import { ref, onMounted } from "vue"
-import PlayerTableOPSChart from "./PlayerTableOPSChart.vue"
-import TopYoungPitchersChart from "./TopYoungPitchersChart.vue";
-import { AllCommunityModule, ModuleRegistry, themeBalham } from 'ag-grid-community'; 
-ModuleRegistry.registerModules([AllCommunityModule]);
-import { AgGridVue } from "ag-grid-vue3";
+import PlayerBattingOPSChart from "./PlayerBattingOPSChart.vue"
+import { AllCommunityModule, ModuleRegistry, themeBalham } from 'ag-grid-community'
+ModuleRegistry.registerModules([AllCommunityModule])
+import { AgGridVue } from "ag-grid-vue3"
 
-const apiUrl = import.meta.env.VITE_API_URL;
+
+const apiUrl = import.meta.env.VITE_API_URL
 // AG Grid related data
 const gridRef = ref(null);
 const autoSizeStrategy = {
@@ -105,11 +105,8 @@ const onSelectionChanged = () => {
         </div>
         <div class="tableNotes">Select players to compare OPS by year...</div>
         <div id="chartContainer" v-show="selectCount > 0">
-            <PlayerTableOPSChart ref="battingChartRef" />
+            <PlayerBattingOPSChart ref="battingChartRef" />
         </div> 
-    </div>
-    <div class="componentContainer">
-        <TopYoungPitchersChart />
     </div>
 </template>
 
@@ -120,7 +117,7 @@ const onSelectionChanged = () => {
     margin-bottom: 3em;
 }
 #tableContainer {
-    border: .5em solid #BD9B60;
+    border: .2em solid gray;
     border-radius: 5px;
 }
 #chartContainer {

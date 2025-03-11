@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from "vue"
-import { AllCommunityModule, ModuleRegistry, themeBalham } from 'ag-grid-community'; 
-ModuleRegistry.registerModules([AllCommunityModule]);
-import { AgGridVue } from "ag-grid-vue3";
+import { AllCommunityModule, ModuleRegistry, themeBalham } from 'ag-grid-community'
+ModuleRegistry.registerModules([AllCommunityModule])
+import { AgGridVue } from "ag-grid-vue3"
 
 
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL
 // AG Grid related data
 const autoSizeStrategy = {
     type: 'fitGridWidth'
@@ -83,7 +83,7 @@ const handleSubmit = async () => {
                 {{ option }}
                 </option>
             </select><span>MLB seasons</span>
-            <button type="submit">
+            <button type="submit" class="btn btn-secondary btn-sm">
             Submit
             </button>
         </form>
@@ -123,18 +123,13 @@ label {
     margin: .2em;
 }
 button {
-    margin: 1em;
-    font-size: small;
-    font-weight: bold;
-    background-color: lightgray;
-    color: black;
-    padding: .2em;
-    border-radius: 5px;
-    cursor: pointer;
+    margin-left: 1em;
+    margin-bottom: .5em;
 }
 .response-message {
     font-weight: bold;
-    color: red;
+    background-color: yellow;
+    padding: .3em;
     margin-bottom: 1em;
 }
 #tableContainer {
