@@ -26,13 +26,13 @@ onMounted(() => {
 <template>
     <div class="d-flex">
         <!-- Sidebar -->
-        <aside :class="{ 'collapsed': !menuOpen }"
-            class="sidebar text-white"
+        <div :class="{ 'collapsed': !menuOpen }"
+            class="d-flex flex-column sidebar text-white"
         >
             <router-link to="/" class="nav-link">
                 <h4 class="text-center" v-show="menuOpen">Dashboard</h4>
             </router-link>
-            <ul class="nav flex-column">
+            <ul class="nav">
                 <li class="nav-item">
                     <router-link to="/dashboard" class="nav-link text-white">
                         <i class="bi bi-people-fill"></i>
@@ -52,7 +52,15 @@ onMounted(() => {
                     </router-link>
                 </li>
             </ul>
-        </aside>
+            <div class="card m-3 mt-auto">
+                <img src="https://picsum.photos/100/100" class="card-img-top p-1">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text text-wrap">Some quick example text for this card.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
 
         <!-- Main Content -->
         <main class="flex-grow-1">
@@ -74,7 +82,7 @@ onMounted(() => {
 
 <style scoped>
 .sidebar {
-  width: 150px;
+  max-width: 200px;
   height: 100vh;
   transition: width 0.3s ease-in-out;
   overflow: hidden;
