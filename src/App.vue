@@ -52,7 +52,7 @@ onMounted(() => {
                     </router-link>
                 </li>
             </ul>
-            <div class="card m-3 mt-auto">
+            <div class="card m-3 mt-auto" v-show="menuOpen">
                 <img src="https://picsum.photos/100/100" class="card-img-top p-1">
                 <div class="card-body">
                     <h5 class="card-title">Card title</h5>
