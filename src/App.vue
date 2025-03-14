@@ -29,36 +29,36 @@ onMounted(() => {
         <div :class="{ 'collapsed': !menuOpen }"
             class="d-flex flex-column sidebar text-white"
         >
-            <router-link to="/" class="nav-link">
+            <RouterLink to="/" class="nav-link">
                 <h4 class="text-center m-2" v-show="menuOpen">Dashboard</h4>
-            </router-link>
+            </RouterLink>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <router-link to="/dashboard" class="nav-link text-white">
+                    <RouterLink to="/dashboard" class="nav-link text-white">
                         <span class="icon-container" title="Players">
                             <img src="../icons/players-icon.png" alt="Icon">
                         </span>
                         <!-- <i class="bi bi-people-fill" data-bs-toggle="tooltip" title="Players"></i> -->
                         <span v-show="menuOpen" class="ms-2">Players</span>
-                    </router-link>
+                    </RouterLink>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/batting" class="nav-link text-white">
+                    <RouterLink to="/batting" class="nav-link text-white">
                         <span class="icon-container" title="Batting">
                             <img src="../icons/batter-icon.png" alt="Icon">
                         </span>
                         <!-- <i class="bi bi-bar-chart-line-fill" data-bs-toggle="tooltip" title="Batting"></i> -->
                         <span v-show="menuOpen" class="ms-2">Batting</span>
-                    </router-link>
+                    </RouterLink>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/pitching" class="nav-link text-white">
+                    <RouterLink to="/pitching" class="nav-link text-white">
                         <span class="icon-container" title="Pitching">
                             <img src="../icons/pitcher-icon.png" alt="Icon">
                         </span>
                         <!-- <i class="bi bi-bar-chart-line-fill" data-bs-toggle="tooltip" title="Pitching"></i> -->
                         <span v-show="menuOpen" class="ms-2">Pitching</span>
-                    </router-link>
+                    </RouterLink>
                 </li>
             </ul>
             <div class="card m-3 mt-auto" v-show="menuOpen">
@@ -83,7 +83,7 @@ onMounted(() => {
 
             <!-- Router View -->
             <div class="container mt-4">
-                <router-view />
+                <RouterView />
             </div>
         </main>
     </div>
@@ -113,7 +113,6 @@ onMounted(() => {
     padding: .2em;
     border-radius: 5px;
 }
-
 @media (max-width: 768px) {
   .sidebar {
     width: 50px;
