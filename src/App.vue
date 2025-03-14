@@ -29,12 +29,12 @@ onMounted(() => {
         <div :class="{ 'collapsed': !menuOpen }"
             class="d-flex flex-column sidebar text-white"
         >
-            <RouterLink to="/" class="nav-link">
+            <RouterLink :to="{name:'home'}" class="nav-link">
                 <h4 class="text-center m-2" v-show="menuOpen">Dashboard</h4>
             </RouterLink>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <RouterLink to="/dashboard" class="nav-link text-white">
+                    <RouterLink :to="{name:'dashboard'}" class="nav-link text-white">
                         <span class="icon-container" title="Players">
                             <img src="../icons/players-icon.png" alt="Icon">
                         </span>
@@ -43,7 +43,7 @@ onMounted(() => {
                     </RouterLink>
                 </li>
                 <li class="nav-item">
-                    <RouterLink to="/batting" class="nav-link text-white">
+                    <RouterLink :to="{name:'batting'}" class="nav-link text-white">
                         <span class="icon-container" title="Batting">
                             <img src="../icons/batter-icon.png" alt="Icon">
                         </span>
@@ -52,7 +52,7 @@ onMounted(() => {
                     </RouterLink>
                 </li>
                 <li class="nav-item">
-                    <RouterLink to="/pitching" class="nav-link text-white">
+                    <RouterLink :to="{name:'pitching'}" class="nav-link text-white">
                         <span class="icon-container" title="Pitching">
                             <img src="../icons/pitcher-icon.png" alt="Icon">
                         </span>
