@@ -30,32 +30,41 @@ onMounted(() => {
             class="d-flex flex-column sidebar text-white"
         >
             <router-link to="/" class="nav-link">
-                <h4 class="text-center" v-show="menuOpen">Dashboard</h4>
+                <h4 class="text-center m-2" v-show="menuOpen">Dashboard</h4>
             </router-link>
-            <ul class="nav">
+            <ul class="nav flex-column">
                 <li class="nav-item">
                     <router-link to="/dashboard" class="nav-link text-white">
-                        <i class="bi bi-people-fill"></i>
-                        <span v-show="menuOpen" class="nav-item-label">Players</span>
+                        <span class="icon-container" title="Players">
+                            <img src="../icons/players-icon.png" alt="Icon">
+                        </span>
+                        <!-- <i class="bi bi-people-fill" data-bs-toggle="tooltip" title="Players"></i> -->
+                        <span v-show="menuOpen" class="ms-2">Players</span>
                     </router-link>
                 </li>
                 <li class="nav-item">
                     <router-link to="/batting" class="nav-link text-white">
-                        <i class="bi bi-bar-chart-line-fill"></i>
-                        <span v-show="menuOpen" class="nav-item-label">Batting</span>
+                        <span class="icon-container" title="Batting">
+                            <img src="../icons/batter-icon.png" alt="Icon">
+                        </span>
+                        <!-- <i class="bi bi-bar-chart-line-fill" data-bs-toggle="tooltip" title="Batting"></i> -->
+                        <span v-show="menuOpen" class="ms-2">Batting</span>
                     </router-link>
                 </li>
                 <li class="nav-item">
                     <router-link to="/pitching" class="nav-link text-white">
-                        <i class="bi bi-bar-chart-line-fill"></i>
-                        <span v-show="menuOpen" class="nav-item-label">Pitching</span>
+                        <span class="icon-container" title="Pitching">
+                            <img src="../icons/pitcher-icon.png" alt="Icon">
+                        </span>
+                        <!-- <i class="bi bi-bar-chart-line-fill" data-bs-toggle="tooltip" title="Pitching"></i> -->
+                        <span v-show="menuOpen" class="ms-2">Pitching</span>
                     </router-link>
                 </li>
             </ul>
             <div class="card m-3 mt-auto" v-show="menuOpen">
                 <img src="https://picsum.photos/100/100" class="card-img-top p-1">
                 <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
+                    <h5 class="card-title">Random Image</h5>
                     <p class="card-text text-wrap">Some quick example text for this card.</p>
                     <a href="#" class="btn btn-primary">Go somewhere</a>
                 </div>
@@ -82,24 +91,29 @@ onMounted(() => {
 
 <style scoped>
 .sidebar {
-  max-width: 200px;
+  width: 200px;
   height: 100vh;
   transition: width 0.3s ease-in-out;
   overflow: hidden;
   white-space: nowrap;
   background-color: #004687;
+  padding: 0px;
 }
 .sidebar.collapsed {
-  width: 50px;
-  padding: 0;
-}
-.nav-item-label {
-    margin-left: 10px;
+  width: 60px;
 }
 .navbar-custom {
     background-color: #BD9B60;
     min-height: 60px;
 }
+.icon-container img {
+    width: 32px;
+    height: 32px;
+    background-color: white;
+    padding: .2em;
+    border-radius: 5px;
+}
+
 @media (max-width: 768px) {
   .sidebar {
     width: 50px;
