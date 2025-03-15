@@ -12,6 +12,8 @@ const routes = [
 ]
 
 const router = createRouter({
+    // Note: when using createWebHistory() in production, a catch-all 
+    // fallback route needs to be added to the server, serving 'index.html'
     history: createWebHistory(),
     routes,
 })

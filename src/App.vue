@@ -29,16 +29,15 @@ onMounted(() => {
         <div :class="{ 'collapsed': !menuOpen }"
             class="d-flex flex-column sidebar text-white"
         >
-            <RouterLink :to="{name:'home'}" class="nav-link">
+            <RouterLink :to="{name:'home'}" class="nav-link" exact-active-class="">
                 <h4 class="text-center m-2" v-show="menuOpen">Dashboard</h4>
             </RouterLink>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <RouterLink :to="{name:'dashboard'}" class="nav-link text-white">
+                    <RouterLink exactActiveClass="border-indigo-700" :to="{name:'dashboard'}" class="nav-link text-white">
                         <span class="icon-container" title="Players">
                             <img src="../icons/players-icon.png" alt="Icon">
                         </span>
-                        <!-- <i class="bi bi-people-fill" data-bs-toggle="tooltip" title="Players"></i> -->
                         <span v-show="menuOpen" class="ms-2">Players</span>
                     </RouterLink>
                 </li>
@@ -47,7 +46,6 @@ onMounted(() => {
                         <span class="icon-container" title="Batting">
                             <img src="../icons/batter-icon.png" alt="Icon">
                         </span>
-                        <!-- <i class="bi bi-bar-chart-line-fill" data-bs-toggle="tooltip" title="Batting"></i> -->
                         <span v-show="menuOpen" class="ms-2">Batting</span>
                     </RouterLink>
                 </li>
@@ -56,7 +54,6 @@ onMounted(() => {
                         <span class="icon-container" title="Pitching">
                             <img src="../icons/pitcher-icon.png" alt="Icon">
                         </span>
-                        <!-- <i class="bi bi-bar-chart-line-fill" data-bs-toggle="tooltip" title="Pitching"></i> -->
                         <span v-show="menuOpen" class="ms-2">Pitching</span>
                     </RouterLink>
                 </li>
@@ -96,14 +93,19 @@ onMounted(() => {
   transition: width 0.3s ease-in-out;
   overflow: hidden;
   white-space: nowrap;
-  background-color: #004687;
+  background-color: rgb(0, 70, 135);
   padding: 0px;
 }
 .sidebar.collapsed {
   width: 60px;
 }
+.router-link-exact-active {
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+    background: rgba(255, 255, 255, .2);
+}
 .navbar-custom {
-    background-color: #BD9B60;
+    background-color: rgb(189, 155, 96);
     min-height: 60px;
 }
 .icon-container img {

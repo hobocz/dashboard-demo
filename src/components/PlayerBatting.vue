@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue"
+import { useRoute, useRouter } from 'vue-router';
 import PlayerBattingOPSChart from "./PlayerBattingOPSChart.vue"
 import { AllCommunityModule, ModuleRegistry, themeBalham } from 'ag-grid-community'
 ModuleRegistry.registerModules([AllCommunityModule])
@@ -7,6 +8,9 @@ import { AgGridVue } from "ag-grid-vue3"
 
 
 const apiUrl = import.meta.env.VITE_API_URL
+// Vue Router related data
+const route = useRoute();
+const router = useRouter();
 // AG Grid related data
 const gridRef = ref(null);
 const autoSizeStrategy = {
@@ -51,8 +55,8 @@ const posNames = {
 const battingChartRef = ref(null);
 const selectCount = ref(0)
 
-// Here we retrieve the player data and assign it to the table "items"
 onMounted(async () => {
+    // Retrieve the player data and assign it to the table items
     const response = await fetch(`${apiUrl}/players/`)
     const playerData = await response.json()
     rowData.value = playerData.map((player) => {
@@ -74,7 +78,23 @@ onMounted(async () => {
         }
     })
 })
-
+// This event fires when grid data changes. Since the grid loads itself
+// async, we need to wait for this before we can tick checkboxes
+const onRowDataUpdated = () => {
+    const loadedRows = gridRef.value.api.getDisplayedRowCount();
+    if (loadedRows > 0){
+        if (route.query.pids) {
+            const pids = route.query.pids
+            .split(',')
+            .map((idStr) => parseInt(idStr))
+            .filter((num) => !isNaN(num))
+            pids.forEach(id => {
+                const node = gridRef.value.api.getRowNode(id.toString())
+                if (node) { node.setSelected(true) }
+            });
+        }
+    }
+}
 // Respond to AG Grid's selection-changed event. Updates the selected
 // players in the child component
 const onSelectionChanged = () => {
@@ -82,12 +102,16 @@ const onSelectionChanged = () => {
     selectCount.value = selectedRows.length
     battingChartRef.value.selectedPlayers = selectedRows
 };
+// this.getRowId = params => params.data.id;
+const getRowId = (params) => { 
+    return params.data.id.toString()
+}
 </script>
 
 <template>
     <div class="componentContainer">
         <div id="tableContainer">
-            <ag-grid-vue
+            <AgGridVue
                 ref="gridRef"
                 :rowData="rowData"
                 :columnDefs="columnDefs"
@@ -99,9 +123,11 @@ const onSelectionChanged = () => {
                 :rowSelection="rowSelection" 
                 @selection-changed="onSelectionChanged"
                 :selectionColumnDef="selectionColumnDef"
+                :getRowId="getRowId"
+                @row-data-updated="onRowDataUpdated"
                 style="height: 400px"
             >
-            </ag-grid-vue>
+            </AgGridVue>
         </div>
         <div class="tableNotes">Select players to compare OPS by year...</div>
         <div id="chartContainer" v-show="selectCount > 0">
