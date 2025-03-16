@@ -57,7 +57,7 @@ const selectCount = ref(0)
 
 onMounted(async () => {
     // Retrieve the player data and assign it to the table items
-    const response = await fetch(`${apiUrl}/players/`)
+    const response = await fetch(`${apiUrl}/players/?stat=batting`)
     const playerData = await response.json()
     rowData.value = playerData.map((player) => {
         return {
@@ -96,13 +96,25 @@ const onRowDataUpdated = () => {
     }
 }
 // Respond to AG Grid's selection-changed event. Updates the selected
-// players in the child component
+// players in the child component and the current URL
 const onSelectionChanged = () => {
     const selectedRows = gridRef.value.api.getSelectedRows()
     selectCount.value = selectedRows.length
     battingChartRef.value.selectedPlayers = selectedRows
+
+    let playerIDs = []
+    selectedRows.forEach(player => {
+        playerIDs.push(player.id)
+    })
+    router.replace({
+        name: 'batting',
+        query: {
+        ...route.query,
+        pids: playerIDs.join(","),
+        },
+    })
 };
-// this.getRowId = params => params.data.id;
+// Use the player IDs as row IDs
 const getRowId = (params) => { 
     return params.data.id.toString()
 }
