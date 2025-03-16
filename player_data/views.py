@@ -16,7 +16,15 @@ we only need simple data retrieval, the basic APIView is used here.
 
 class PlayerList(APIView):
     def get(self, request, format=None):
-        players = Player.objects.all()
+        stat = request.GET.get('stat')
+        print("STAT: ", stat)
+        if stat == 'batting':
+            players = Player.objects.filter(batting__isnull=False).distinct()
+        elif stat == 'pitching':
+            players = Player.objects.filter(pitching__isnull=False).distinct()
+        else:
+            players = Player.objects.all()
+
         serializer = PlayerSerializer(players, many=True)
         return Response(serializer.data)
 
