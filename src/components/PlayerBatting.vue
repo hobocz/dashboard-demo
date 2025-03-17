@@ -141,7 +141,12 @@ const getRowId = (params) => {
             >
             </AgGridVue>
         </div>
-        <div class="tableNotes">Select players to compare OPS by year...</div>
+        <div>
+            <div class="tableNotes" v-show="selectCount === 0">Select players to compare some stats...</div>
+            <div v-show="selectCount > 0">
+                <button class="btn btn-secondary btn-sm p-0" @click="gridRef.api.deselectAll">Clear Selections</button>
+            </div>
+        </div>
         <div id="chartContainer" v-show="selectCount > 0">
             <PlayerBattingOPSChart ref="battingChartRef" />
         </div> 
@@ -166,5 +171,8 @@ const getRowId = (params) => {
     text-align: left;
     font-weight: bold;
     margin: .2em;
+}
+.clearButton {
+    margin-left: auto;
 }
 </style>

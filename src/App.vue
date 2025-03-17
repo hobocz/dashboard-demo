@@ -88,16 +88,16 @@ onMounted(() => {
 
 <style scoped>
 .sidebar {
-  width: 200px;
-  height: 100vh;
-  transition: width 0.3s ease-in-out;
-  overflow: hidden;
-  white-space: nowrap;
-  background-color: rgb(0, 70, 135);
-  padding: 0px;
+    width: 200px;
+    height: 100vh;
+    transition: width 0.3s ease-in-out;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: rgb(0, 70, 135);
+    padding: 0px;
 }
 .sidebar.collapsed {
-  width: 60px;
+    width: 60px;
 }
 .router-link-exact-active {
     border-top: 1px solid white;
