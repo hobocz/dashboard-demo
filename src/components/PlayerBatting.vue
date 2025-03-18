@@ -1,30 +1,31 @@
 <script setup>
 import { ref, onMounted } from "vue"
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'
 import PlayerBattingOPSChart from "./PlayerBattingOPSChart.vue"
+import { useFetchPlayerStore } from '@/services/fetch'
+import { AgGridVue } from "ag-grid-vue3"
 import { AllCommunityModule, ModuleRegistry, themeBalham } from 'ag-grid-community'
 ModuleRegistry.registerModules([AllCommunityModule])
-import { AgGridVue } from "ag-grid-vue3"
 
 
-const apiUrl = import.meta.env.VITE_API_URL
+const fetchPlayerStore = useFetchPlayerStore()
 // Vue Router related data
-const route = useRoute();
-const router = useRouter();
+const route = useRoute()
+const router = useRouter()
 // AG Grid related data
-const gridRef = ref(null);
+const gridRef = ref(null)
 const autoSizeStrategy = {
     type: 'fitGridWidth'
 }
 const rowSelection = { 
     mode: 'multiRow' ,
     headerCheckbox: false,
-};
+}
 const selectionColumnDef = {
     sortable: true,
     resizable: false,
     width: 60
-};
+}
 const columnDefs = ref([
     { field: "name_first", headerName: "First Name" },
     { field: "name_last", headerName: "Last Name", filter: true },
@@ -36,52 +37,19 @@ const columnDefs = ref([
     { field: "throws", headerName: "Throws", filter: true },
     { field: "bats", headerName: "Bats", filter: true },
     { field: "primary_position", headerName: "Primary Pos", filter: true },
-]);
-const rowData = ref([]);
-const posNames = {
-    "1": "Pitcher",
-    "2": "Catcher",
-    "3": "1st Base",
-    "4": "2nd Base",
-    "5": "3rd Base",
-    "6": "Shortstop",
-    "7": "Left Field",
-    "8": "Center Field",
-    "9": "Right Field",
-    "O": "Offence",
-    "D": "Defense",
-}
+])
+const rowData = ref(null)
 // Reference to the exposed child data
-const battingChartRef = ref(null);
+const battingChartRef = ref(null)
 const selectCount = ref(0)
 
-onMounted(async () => {
-    // Retrieve the player data and assign it to the table items
-    const response = await fetch(`${apiUrl}/players/?stat=batting`)
-    const playerData = await response.json()
-    rowData.value = playerData.map((player) => {
-        return {
-            id: player.id,
-            name_first: player.name_first,
-            name_last: player.name_last,
-            name_use: `"${player.name_use}"`,
-            team: player.team,
-            birth_date: player.birth_date,
-            // Use '!=' in the below ternary in order to get not null and not undefined
-            height_total: `${player.height_feet}' - 
-                ${player.height_inches != null ? player.height_inches : '?'}"`,
-            weight: `${player.weight} lbs`,
-            throws: player.throws,
-            bats: player.bats,
-            primary_position: `${player.primary_position ? player.primary_position
-                 + " - " + posNames[player.primary_position] : "undefined"}`,
-        }
-    })
+onMounted(() => {
+    fetchPlayerStore.fetchData("batting")
 })
 // This event fires when grid data changes. Since the grid loads itself
 // async, we need to wait for this before we can tick checkboxes
 const onRowDataUpdated = () => {
-    const loadedRows = gridRef.value.api.getDisplayedRowCount();
+    const loadedRows = gridRef.value.api.getDisplayedRowCount()
     if (loadedRows > 0){
         if (route.query.pids) {
             const pids = route.query.pids
@@ -91,7 +59,7 @@ const onRowDataUpdated = () => {
             pids.forEach(id => {
                 const node = gridRef.value.api.getRowNode(id.toString())
                 if (node) { node.setSelected(true) }
-            });
+            })
         }
     }
 }
@@ -113,7 +81,7 @@ const onSelectionChanged = () => {
         pids: playerIDs.join(","),
         },
     })
-};
+}
 // Use the player IDs as row IDs
 const getRowId = (params) => { 
     return params.data.id.toString()
@@ -125,7 +93,7 @@ const getRowId = (params) => {
         <div id="tableContainer">
             <AgGridVue
                 ref="gridRef"
-                :rowData="rowData"
+                :rowData="fetchPlayerStore.playersBatting"
                 :columnDefs="columnDefs"
                 :autoSizeStrategy="autoSizeStrategy"
                 :pagination="true"

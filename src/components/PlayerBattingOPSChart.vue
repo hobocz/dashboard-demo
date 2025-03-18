@@ -20,12 +20,12 @@ ChartJS.register(
     Tooltip,
     Legend
 )
-ChartJS.register(Colors);
+ChartJS.register(Colors)
 
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL
 // The selected player data passed from the parent component
 const selectedPlayers = ref([])
-defineExpose({selectedPlayers});
+defineExpose({selectedPlayers})
 // Chart data and options
 const chartData = ref({})
 const chartOptions = {

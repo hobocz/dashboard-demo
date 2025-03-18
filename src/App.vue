@@ -14,13 +14,13 @@ const toggleSidebar = () => {
 const handleMediaQueryChange = (event) => {
     smMedia.value = event.matches
     menuOpen.value = !event.matches
-};
+}
 
 onMounted(() => {
     const mediaQuery = window.matchMedia("(max-width: 768px)")
     handleMediaQueryChange(mediaQuery)
     mediaQuery.addEventListener("change", handleMediaQueryChange)
-});
+})
 </script>
 
 <template>

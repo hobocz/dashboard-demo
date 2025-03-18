@@ -6,6 +6,7 @@ from django.http import Http404
 from collections import namedtuple
 from django.http import JsonResponse
 from django.db import connection
+import time
 
 """ Simple class views
 
@@ -16,8 +17,9 @@ we only need simple data retrieval, the basic APIView is used here.
 
 class PlayerList(APIView):
     def get(self, request, format=None):
+        # Optionally create a pause for testing...
+        # time.sleep(1)
         stat = request.GET.get('stat')
-        print("STAT: ", stat)
         if stat == 'batting':
             players = Player.objects.filter(batting__isnull=False).distinct()
         elif stat == 'pitching':

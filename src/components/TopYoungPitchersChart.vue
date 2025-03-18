@@ -18,8 +18,8 @@ const columnDefs = ref([
     { field: "years", headerName: "Years" },
     { field: "wins", headerName: "Wins" },
     { field: "wins_per_year", headerName: "Wins per Year" },
-]);
-const rowData = ref([]);
+])
+const rowData = ref([])
 
 // Form related data
 const formData = ref({
@@ -27,7 +27,7 @@ const formData = ref({
     minAvgWins: null,
     maxYears: null,
 })
-const responseMessage = ref("");
+const responseMessage = ref("")
 const agesList = ref(Array.from({ length: 30 - 20 + 1 }, (_, i) => 20 + i))
 const winsList = ref(Array.from({ length: 10 - 1 + 1 }, (_, i) => 1 + i))
 const yearsList = ref(Array.from({ length: 10 - 1 + 1 }, (_, i) => 1 + i))
@@ -35,17 +35,17 @@ const yearsList = ref(Array.from({ length: 10 - 1 + 1 }, (_, i) => 1 + i))
 // Handle form submission. Populate the table with the results.
 const handleSubmit = async () => {
     if (!formData.value.maxAge || !formData.value.minAvgWins || !formData.value.maxYears) {
-        responseMessage.value = "Please make a choice for all options";
-        return;
+        responseMessage.value = "Please make a choice for all options"
+        return
     }
-    responseMessage.value = "";
+    responseMessage.value = ""
 
     const response = await fetch(`${apiUrl}/players/top-young-pitchers/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData.value),
-    });
-    const playerData = await response.json();
+    })
+    const playerData = await response.json()
     rowData.value = playerData.map((player) => {
         return {
             id: player.id,
