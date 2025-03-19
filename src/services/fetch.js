@@ -35,8 +35,8 @@ const mapPlayer = (player) => {
     }
 }
 
-export const useFetchPlayerStore = defineStore("fetchStore", () => {
-    const allPlayers = ref(null)
+export const useFetchPlayersStore = defineStore("fetchPlayers", () => {
+    const playersAll = ref(null)
     const playersBatting = ref(null)
     const playersPitching = ref(null)
     const error = ref(null)
@@ -44,18 +44,25 @@ export const useFetchPlayerStore = defineStore("fetchStore", () => {
 
     async function fetchData(type) {
         if (!["all", "batting", "pitching"].includes(type)) {
-            error.value = "Invalid fetch type"
+            error.value = "Invalid player fetch type"
             return
         }
-        // Should data be reloaded each time?...
-        // if (type === "all" && allPlayers.value) return
-        // if (type === "batting" && playersBatting.value) return
-        // if (type === "pitching" && playersPitching.value) return
+        if (type === "all" && playersAll.value) return
+        if (type === "batting" && playersBatting.value) return
+        if (type === "pitching" && playersPitching.value) return
         loading.value = true
         try {
             const result = await fetch(`${apiUrl}/players/?stat=${type}`)
             const playerData = await result.json()
-            playersBatting.value = playerData.map(mapPlayer)
+            if(type === "batting"){
+                playersBatting.value = playerData.map(mapPlayer)
+            }
+            else if(type === "pitching"){
+                playersPitching.value = playerData.map(mapPlayer)
+            }
+            else {
+                playersAll.value = playerData.map(mapPlayer)
+            }
         } catch (err) {
             error.value = err
         } finally {
@@ -64,5 +71,5 @@ export const useFetchPlayerStore = defineStore("fetchStore", () => {
 
     }
 
-    return { allPlayers, playersBatting, playersPitching, error, loading, fetchData }
+    return { playersAll, playersBatting, playersPitching, error, loading, fetchData }
 })

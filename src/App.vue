@@ -30,11 +30,12 @@ onMounted(() => {
             class="d-flex flex-column sidebar text-white"
         >
             <RouterLink :to="{name:'home'}" class="nav-link" exact-active-class="">
-                <h4 class="text-center m-2" v-show="menuOpen">Dashboard</h4>
+                <div class="h4 text-center m-2" v-show="menuOpen">Dashboard</div>
+                <div class="h4 text-center m-2" v-show="!menuOpen">D</div>
             </RouterLink>
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <RouterLink exactActiveClass="border-indigo-700" :to="{name:'dashboard'}" class="nav-link text-white">
+                    <RouterLink :to="{name:'players'}" class="nav-link text-white">
                         <span class="icon-container" title="Players">
                             <img src="../icons/players-icon.png" alt="Icon">
                         </span>

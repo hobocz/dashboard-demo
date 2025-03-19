@@ -110,7 +110,6 @@ const parsePlayerBattingData = (playerNameStats, newChartData) => {
 watch(selectedPlayers, (updatedPlayers) => {
     // This is wrapped in an async IIFE to get the intended order of operations
     (async () => {
-        if (updatedPlayers.length > 5) { return }
         const newChartData = {labels: [], datasets: []}
         const yearSet = new Set()
         const allPlayersBattingStats = []
@@ -141,7 +140,7 @@ watch(selectedPlayers, (updatedPlayers) => {
         // Replace the old chart data with the new
         chartData.value = newChartData
         loaded.value = true
-    })();
+    })()
 }, { deep: true })
 </script>
 

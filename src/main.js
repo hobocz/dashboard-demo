@@ -9,6 +9,7 @@ import "bootstrap"
 import "bootstrap-icons/font/bootstrap-icons.css"
 
 const pinia = createPinia()
+
 createApp(App)
     .use(router)
     .use(pinia)
