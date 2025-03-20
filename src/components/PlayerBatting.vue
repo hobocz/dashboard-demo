@@ -14,31 +14,21 @@ const fetchPlayersStore = useFetchPlayersStore()
 const route = useRoute()
 const router = useRouter()
 // AG Grid related data
-const gridRef = ref(null)
+const playerGridRef = ref(null)
 const autoSizeStrategy = {
     type: "fitGridWidth"
 }
 const rowSelection = { 
-    mode: "multiRow" ,
+    mode: "multiRow",
     headerCheckbox: false,
 }
 const selectionColumnDef = {
     sortable: true,
     resizable: false,
-    width: 60
+    flex: 1,
+    maxWidth: 60,
+    maxWidth: 60
 }
-const columnDefs = ref([
-    { field: "name_first", headerName: "First Name" },
-    { field: "name_last", headerName: "Last Name", filter: true },
-    { field: "name_use", headerName: "Use Name" },
-    { field: "team", headerName: "Team", filter: true },
-    { field: "birth_date", headerName: "Birth Date", filter: true },
-    { field: "height_total", headerName: "Height" },
-    { field: "weight", headerName: "Weight" },
-    { field: "throws", headerName: "Throws", filter: true },
-    { field: "bats", headerName: "Bats", filter: true },
-    { field: "primary_position", headerName: "Primary Pos", filter: true },
-])
 // Reference to the exposed child data
 const battingChartRef = ref(null)
 const selectCount = ref(0)
@@ -49,7 +39,7 @@ onMounted(() => {
 // This event fires when grid data changes. Since the grid loads itself
 // async, we need to wait for this before we can tick checkboxes
 const onRowDataUpdated = () => {
-    const loadedRows = gridRef.value.api.getDisplayedRowCount()
+    const loadedRows = playerGridRef.value.api.getDisplayedRowCount()
     if (loadedRows > 0){
         if (route.query.pids) {
             const pids = route.query.pids
@@ -57,7 +47,7 @@ const onRowDataUpdated = () => {
             .map((idStr) => parseInt(idStr))
             .filter((num) => !isNaN(num))
             pids.forEach(id => {
-                const node = gridRef.value.api.getRowNode(id.toString())
+                const node = playerGridRef.value.api.getRowNode(id.toString())
                 if (node) { node.setSelected(true) }
             })
         }
@@ -66,7 +56,7 @@ const onRowDataUpdated = () => {
 // Respond to AG Grid's selection-changed event. Updates the selected
 // players in the child component and the current URL
 const onSelectionChanged = () => {
-    const selectedRows = gridRef.value.api.getSelectedRows()
+    const selectedRows = playerGridRef.value.api.getSelectedRows()
     selectCount.value = selectedRows.length
     battingChartRef.value.selectedPlayers = selectedRows
 
@@ -92,9 +82,9 @@ const getRowId = (params) => {
     <div class="componentContainer">
         <div class="border border-secondary border-2 rounded-1">
             <AgGridVue
-                ref="gridRef"
+                ref="playerGridRef"
                 :rowData="fetchPlayersStore.playersBatting"
-                :columnDefs="columnDefs"
+                :columnDefs="fetchPlayersStore.playerColumnDefs"
                 :autoSizeStrategy="autoSizeStrategy"
                 :pagination="true"
                 :paginationPageSize="25"
@@ -113,7 +103,7 @@ const getRowId = (params) => {
             <div class="alert alert-danger" v-show="fetchPlayersStore.error">{{ fetchPlayersStore.error }}</div>
             <div class="fw-bold m-1" v-show="selectCount === 0">Select players to compare some stats...</div>
             <div v-show="selectCount > 0">
-                <button class="btn btn-secondary btn-sm p-0" @click="gridRef.api.deselectAll">Clear Selections</button>
+                <button class="btn btn-secondary btn-sm p-0" @click="playerGridRef.api.deselectAll">Clear Selections</button>
             </div>
         </div>
         <div id="chartContainer" v-show="selectCount > 0">
