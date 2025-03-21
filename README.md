@@ -1,9 +1,11 @@
 <a id="readme-top"></a>
 
-<img src="./public/ss_players_wide.png" width="200" style="margin-right: 5px;">
-<img src="./public/ss_players_mobile.png" width="100" style="margin-right: 5px;">
-<img src="./public/ss_batting.png" width="200" style="margin-right: 5px;">
-<img src="./public/ss_pitching.png" width="100" style="margin-right: 5px;">
+<table><tr>
+<td align="center"><img src="./public/ss_players_wide.png" width="200"></td>
+<td align="center"><img src="./public/ss_players_mobile.png" width="100"></td>
+<td align="center"><img src="./public/ss_batting.png" width="200"></td>
+<td align="center"><img src="./public/ss_pitching.png" width="100"></td>
+</tr></table>
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
