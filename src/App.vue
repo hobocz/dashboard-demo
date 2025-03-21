@@ -105,7 +105,9 @@ onMounted(() => {
     background: rgba(255, 255, 255, .2);
 }
 .navbar-custom {
-    background-color: rgb(189, 155, 96);
+    /* background-color: rgb(189, 155, 96); */
+    /* background-color: #dddddd; */
+    background-image: linear-gradient(rgb(0, 70, 135), white);
     min-height: 60px;
 }
 .icon-container img {

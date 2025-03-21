@@ -1,6 +1,9 @@
 <a id="readme-top"></a>
 
-<img src="./public/kcr_logo.png" width="100">
+<img src="./public/ss_players_wide.png" width="200" style="margin-right: 5px;">
+<img src="./public/ss_players_mobile.png" width="100" style="margin-right: 5px;">
+<img src="./public/ss_batting.png" width="200" style="margin-right: 5px;">
+<img src="./public/ss_pitching.png" width="100" style="margin-right: 5px;">
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -27,28 +30,30 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-- This is a webapp whose primary frameworks are Django and Vue.
+- This is a dashboard built to show various Major League Baseball stats.
+- The primary frameworks are Django and Vue, but it also makes use of many other packages. See [Built With](#built-with) below.
+- **Please Note**: I intentionally chose not to use a more professional looking UI template. This UI is relatively rudimentary because I am using it as a practice & learning tool and building everything fom scratch. 
 - The project is in a "developer" stage only. There is no distribution. It is currently meant to run using the Django development server as the backend service and the Vite development server as the web server for the frontend.
-- The database is Django's default SQLite. Other options seemed out of scope.
-- For the ETL, tools like Spark, dbt, Airflow etc, also all seemed out of scope. Therefore python **pandas** is used for the transformation and validation. This seemed a little more reasonable based on time constraints and project scope.
+- The data is a local JSON file located here `/data/players.json`. In a production environment the data source(s) will likely be much more varied, and "Extract" portion of the pipeline will of course need to be more robust.
+- The database is Django's default SQLite. A production database is on the ToDo list.
+- In production environment ETL, tools like Spark, dbt, Airflow etc, should be used. However for this demo, python *pandas* is used for the transformation and validation.
     - The need is small.
     - It allows the ETL process to be easily implemented as a custom Django admin command.
     - It allows me to demonstrate proficiency with pandas because it's always useful to have pandas in your back pocket :panda_face:
-- The project is essentially made of 2 Vue.js components in a parent-child relationship. These are placed in a minimal page framework for purposes of the demo. In the future I'd like to integrate these components (and more) into a cool template like [this](https://demos.creative-tim.com/vue-black-dashboard/)
 - Quick note: In my code I don't adhere strictly to 72 char lines. It's so short! I usually shoot for around 80ish. However I'm perfectly happy to adhere to any code standards, use formatters, prettifiers, etc.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Omissions
 
-There are lots of things which could or should be included in a production level project, but they are not included here for a number of reasons: time constraint, out of scope, or potentially not implemented within the group/dept.
-Examples:
-- Unit testing
-- Type hinting
-- Responsive UI
-- CSS framework
+Again, this is an ongoing project. There are many things which are only minimally implemented at present (or not at all).
+Some examples:
+- Unit testing (minimal)
+- Type hinting (not implemented)
+- Responsive UI (minimal)
+- CSS framework (minimal)
 
-I am capable of implementing these things (and would advocate for them), they're just not included here.
+As the project moves forward I intend to more fully include these items and others.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -64,6 +69,8 @@ Packages:
 - Django Rest Framework: 3.15.2
 - pandas: 2.2.3
 - Vue: 3.5.13
+- Pinia: 3.0.1
+- Bootstrap: 5.3.3
 - ChartJS: 4.4.8
 - vue-chartjs: 5.3.2
 - ag-grid-vue3: 33.1.1
@@ -74,7 +81,7 @@ Packages:
 
 *The following assumes `pip` and `npm` as the package managers*
 
-After cloning the repo and changing to the KCR directory:
+After cloning the repo and changing to the dashboard-demo directory:
 
 For the backend:
 1. Create and activate a python virtual environment
@@ -111,16 +118,16 @@ For the frontend (in a separate shell):
 ### Models
 
 Given the structure of the JSON data, the following relational architecture was created:
-![Database ERD](./doc/KCR_ERD.png)
+![Database ERD](./doc/dash_demo_ERD.png)
 
 ### API
 
 Since the only requirement on the API is data retrieval, only a partial RESTful API was implemented:
-| Method | Endpoint | Description | Response |
-| ---------- | ---------- | ---------- | ---------- |
-| GET | /players/ | Retrieve all players | 200 OK (JSON array of players) |
-| GET | /players/{id}/ | Retrieve a specific player | 200 OK (Player JSON) or 404 Not Found |
-| GET | /players/{id}/stats/ | Retrieve stats for a specific player | 200 OK (Stats JSON) or 404 Not Found |
+| Method | Endpoint | Description | Query Params | Response |
+| ---------- | ---------- | ---------- | ---------- | ---------- |
+| GET | /players/ | Retrieve all players | stat=['all' \| 'batting' \| 'pitching'] | 200 OK (JSON array of players) |
+| GET | /players/{id}/ | Retrieve a specific player | n/a | 200 OK (Player JSON) or 404 Not Found |
+| GET | /players/{id}/stats/ | Retrieve stats for a specific player | n/a | 200 OK (Stats JSON) or 404 Not Found |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -135,7 +142,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Chris Zaleski - zaleski.chris@gmail.com
 
-Project Link: [https://github.com/hobocz/KCR](https://github.com/hobocz/KCR)
+Project Link: [https://github.com/hobocz/dashboard-demo](https://github.com/hobocz/dashboard-demo)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
