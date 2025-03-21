@@ -5,7 +5,6 @@ const menuOpen = ref(true)
 const smMedia = ref(false)
 
 const toggleSidebar = () => {
-    console.log(smMedia.value)
     if(!smMedia.value){
         menuOpen.value = !menuOpen.value
     } 

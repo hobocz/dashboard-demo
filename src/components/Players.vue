@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onMounted } from "vue"
-import { useRoute, useRouter } from "vue-router"
 import { useFetchPlayersStore } from "@/services/fetch"
 import { AgGridVue } from "ag-grid-vue3"
 import { AllCommunityModule, ModuleRegistry, themeBalham } from "ag-grid-community"
@@ -10,9 +9,6 @@ ModuleRegistry.registerModules([AllCommunityModule])
 const apiUrl = import.meta.env.VITE_API_URL
 // Get/create player data pinia store
 const fetchPlayersStore = useFetchPlayersStore()
-// Vue Router related data
-const route = useRoute()
-const router = useRouter()
 // AG Grid related data
 const playerGridRef = ref(null)
 const autoSizeStrategy = {
@@ -23,6 +19,10 @@ const rowSelection = {
     checkboxes: false,
     enableClickSelection: true
 }
+const gridThemeCustom = themeBalham.withParams({
+    // headerTextColor: "white",
+    headerBackgroundColor: "#dddddd",
+});
 const battingColumnDefs = ref([
     { field: "year", headerName: "YR", headerTooltip: "Year", flex: 4, minWidth: 45 },
     { field: "league", headerName: "LG", headerTooltip: "League", flex: 2, minWidth: 32 },
@@ -155,7 +155,7 @@ const getRowId = (params) => {
                 :pagination="true"
                 :paginationPageSize="25"
                 :paginationPageSizeSelector="[25, 50, 100]"
-                :theme="themeBalham"
+                :theme="gridThemeCustom"
                 :rowSelection="rowSelection" 
                 @selection-changed="onSelectionChanged"
                 :getRowId="getRowId"
@@ -168,19 +168,19 @@ const getRowId = (params) => {
             <div class="fw-bold m-1" v-show="!selectedPlayer">Select a player to see their stats...</div>
         </div>
         <div id="statContainer">
-            <div v-if="selectedPlayer" class="h4 mt-2 text-decoration-underline">
+            <div v-if="selectedPlayer" class="h4 mt-2 fw-bold text-decoration-underline">
                 {{ selectedPlayer.name_first + " " + selectedPlayer.name_last }}
             </div>
             <div v-if="selectedPlayer">
                 <div v-if="selectedPlayerStats.batting?.length > 0"
                     class="border border-secondary border-2 rounded-1 my-2 p-1">
-                    <div class="bg-secondary text-white">Batting Stats:</div>
+                    <div class="p-1 fw-bold">Batting Stats:</div>
                     <AgGridVue
                         ref="battingGridRef"
                         :rowData="battingRowData"
                         :columnDefs="battingColumnDefs"
                         :autoSizeStrategy="autoSizeStrategy"
-                        :theme="themeBalham"
+                        :theme="gridThemeCustom"
                         :getRowId="getRowId"
                         domLayout="autoHeight"
                     >
@@ -191,13 +191,13 @@ const getRowId = (params) => {
                 </div>
                 <div v-if="selectedPlayerStats.pitching?.length > 0"
                     class="border border-secondary border-2 rounded-1 my-2 p-1">
-                    <div>Pitching Stats:</div>
+                    <div class="p-1 fw-bold">Pitching Stats:</div>
                     <AgGridVue
                         ref="pitchingGridRef"
                         :rowData="pitchingRowData"
                         :columnDefs="pitchingColumnDefs"
                         :autoSizeStrategy="autoSizeStrategy"
-                        :theme="themeBalham"
+                        :theme="gridThemeCustom"
                         :getRowId="getRowId"
                         domLayout="autoHeight"
                     >

@@ -29,6 +29,10 @@ const selectionColumnDef = {
     maxWidth: 60,
     maxWidth: 60
 }
+const gridThemeCustom = themeBalham.withParams({
+    // headerTextColor: "white",
+    headerBackgroundColor: "#dddddd",
+});
 // Reference to the exposed child data
 const battingChartRef = ref(null)
 const selectCount = ref(0)
@@ -89,7 +93,7 @@ const getRowId = (params) => {
                 :pagination="true"
                 :paginationPageSize="25"
                 :paginationPageSizeSelector="[25, 50, 100]"
-                :theme="themeBalham"
+                :theme="gridThemeCustom"
                 :rowSelection="rowSelection" 
                 @selection-changed="onSelectionChanged"
                 :selectionColumnDef="selectionColumnDef"
