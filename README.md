@@ -1,6 +1,6 @@
 <a id="readme-top"></a>
 
-<table width="100%"><tr>
+<table><tr>
 <td align="center"><img src="./public/ss_players_wide.png" width="200"></td>
 <td align="center"><img src="./public/ss_players_mobile.png" width="100"></td>
 <td align="center"><img src="./public/ss_batting.png" width="200"></td>
@@ -34,7 +34,7 @@
 ## About The Project
 - This is a dashboard built to show various Major League Baseball stats.
 - The primary frameworks are Django and Vue, but it also makes use of many other packages. See [Built With](#built-with) below.
-- **Please Note**: I intentionally chose not to use a more professional looking UI template. This UI is relatively rudimentary because I am using it as a practice & learning tool and building everything fom scratch. 
+- **Please Note**: I intentionally chose not to use a more professional looking UI template. This UI is relatively rudimentary because I am using it as a practice & learning tool, and building everything fom scratch. 
 - The project is in a "developer" stage only. There is no distribution. It is currently meant to run using the Django development server as the backend service and the Vite development server as the web server for the frontend.
 - The data is a local JSON file located here `/data/players.json`. In a production environment the data source(s) will likely be much more varied, and "Extract" portion of the pipeline will of course need to be more robust.
 - The database is Django's default SQLite. A production database is on the ToDo list.
@@ -43,6 +43,7 @@
     - It allows the ETL process to be easily implemented as a custom Django admin command.
     - It allows me to demonstrate proficiency with pandas because it's always useful to have pandas in your back pocket :panda_face:
 - Quick note: In my code I don't adhere strictly to 72 char lines. It's so short! I usually shoot for around 80ish. However I'm perfectly happy to adhere to any code standards, use formatters, prettifiers, etc.
+- *This is an ongoing/demo/template project. It's definitely incomplete and imperfect.*
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
