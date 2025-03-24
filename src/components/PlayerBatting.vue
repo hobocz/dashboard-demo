@@ -2,14 +2,14 @@
 import { ref, onMounted } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import PlayerBattingOPSChart from "./PlayerBattingOPSChart.vue"
-import { useFetchPlayersStore } from "@/services/fetch"
+import { fetchData } from "@/services/fetch"
+import { usePlayerStore } from "@/stores/player"
 import { AgGridVue } from "ag-grid-vue3"
 import { AllCommunityModule, ModuleRegistry, themeBalham } from "ag-grid-community"
 ModuleRegistry.registerModules([AllCommunityModule])
 
 
-// Get/create player data pinia store
-const fetchPlayersStore = useFetchPlayersStore()
+const playerStore = usePlayerStore()
 // Vue Router related data
 const route = useRoute()
 const router = useRouter()
@@ -38,7 +38,7 @@ const battingChartRef = ref(null)
 const selectCount = ref(0)
 
 onMounted(() => {
-    fetchPlayersStore.fetchData("batting")
+    fetchData("batting")
 })
 // This event fires when grid data changes. Since the grid loads itself
 // async, we need to wait for this before we can tick checkboxes
@@ -87,8 +87,8 @@ const getRowId = (params) => {
         <div class="border border-secondary border-2 rounded-1">
             <AgGridVue
                 ref="playerGridRef"
-                :rowData="fetchPlayersStore.playersBatting"
-                :columnDefs="fetchPlayersStore.playerColumnDefs"
+                :rowData="playerStore.battingOnly"
+                :columnDefs="playerStore.playerColumnDefs"
                 :autoSizeStrategy="autoSizeStrategy"
                 :pagination="true"
                 :paginationPageSize="25"
@@ -104,7 +104,7 @@ const getRowId = (params) => {
             </AgGridVue>
         </div>
         <div>
-            <div class="alert alert-danger" v-show="fetchPlayersStore.error">{{ fetchPlayersStore.error }}</div>
+            <div class="alert alert-danger" v-show="playerStore.error">{{ playerStore.error }}</div>
             <div class="fw-bold m-1" v-show="selectCount === 0">Select players to compare some stats...</div>
             <div v-show="selectCount > 0">
                 <button class="btn btn-secondary btn-sm p-0" @click="playerGridRef.api.deselectAll">Clear Selections</button>

@@ -1,14 +1,14 @@
 <script setup>
 import { ref, onMounted } from "vue"
-import { useFetchPlayersStore } from "@/services/fetch"
+import { fetchData } from "@/services/fetch"
+import { usePlayerStore } from "@/stores/player"
 import { AgGridVue } from "ag-grid-vue3"
 import { AllCommunityModule, ModuleRegistry, themeBalham } from "ag-grid-community"
 ModuleRegistry.registerModules([AllCommunityModule])
 
 
 const apiUrl = import.meta.env.VITE_API_URL
-// Get/create player data pinia store
-const fetchPlayersStore = useFetchPlayersStore()
+const playerStore = usePlayerStore()
 // AG Grid related data
 const playerGridRef = ref(null)
 const autoSizeStrategy = {
@@ -72,7 +72,7 @@ const selectedPlayerStats = ref(null)
 
 onMounted(() => {
     playerGridRef.value.api.setGridOption("alwaysShowHorizontalScroll", true)
-    fetchPlayersStore.fetchData("all")
+    fetchData("all")
 })
 
 const mapBattingData = () => {
@@ -149,8 +149,8 @@ const getRowId = (params) => {
         <div class="border border-secondary border-2 rounded-1">
             <AgGridVue
                 ref="playerGridRef"
-                :rowData="fetchPlayersStore.playersAll"
-                :columnDefs="fetchPlayersStore.playerColumnDefs"
+                :rowData="playerStore.allPlayers"
+                :columnDefs="playerStore.playerColumnDefs"
                 :autoSizeStrategy="autoSizeStrategy"
                 :pagination="true"
                 :paginationPageSize="25"
@@ -164,7 +164,7 @@ const getRowId = (params) => {
             </AgGridVue>
         </div>
         <div>
-            <div class="alert alert-danger" v-show="fetchPlayersStore.error">{{ fetchPlayersStore.error }}</div>
+            <div class="alert alert-danger" v-show="playerStore.error">{{ playerStore.error }}</div>
             <div class="fw-bold m-1" v-show="!selectedPlayer">Select a player to see their stats...</div>
         </div>
         <div id="statContainer">
