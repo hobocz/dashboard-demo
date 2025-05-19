@@ -32,7 +32,7 @@ onMounted(() => {
                 <div class="h4 text-center m-2" v-show="menuOpen">Dashboard</div>
                 <div class="h4 text-center m-2" v-show="!menuOpen">D</div>
             </RouterLink>
-            <ul class="nav flex-column">
+            <ul class="nav flex-column mt-3">
                 <li class="nav-item">
                     <RouterLink :to="{name:'players'}" class="nav-link text-white">
                         <span class="icon-container" title="Players">
@@ -106,8 +106,8 @@ onMounted(() => {
 }
 .navbar-custom {
     /* background-color: rgb(189, 155, 96); */
-    /* background-color: #dddddd; */
-    background-image: linear-gradient(rgb(0, 70, 135), white);
+    background-color: rgb(0, 70, 135);
+    /* background-image: linear-gradient(rgb(0, 70, 135), white); */
     min-height: 60px;
 }
 .icon-container img {
